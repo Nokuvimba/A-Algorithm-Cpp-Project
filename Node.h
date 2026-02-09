@@ -3,15 +3,6 @@
 A* Algorithm Project
 Author: Nokuvimba Natalie Chiyaka
 Start Date: 04/02/2026
-runs a test map
+a node in the grid, stores its position, g cost, h cost, f cost, and parent node
 =========================================
 */
-
-#include "AStar.h"
-
-
-int main() {
-    AStar astar;
-    astar.demoBasics();
-    return 0;
-}
