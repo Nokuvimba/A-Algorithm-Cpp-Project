@@ -38,5 +38,34 @@ In lab 1 I worked on printing out a matrix in interger and string form:
 <img width=33.3% height="435" alt="image" src="https://github.com/user-attachments/assets/037e21b2-037c-42a9-80fe-35b53e15ac80" />
 <img width=30.3% height="435" alt="image" src="https://github.com/user-attachments/assets/253150f2-7f39-4d22-9b51-d8a173c5e686" />
 
+## Week 1 → Week 2 Bridge (Grid + Basics for A*)
+
+### What I implemented
+This week I moved from a simple “print a grid” demo to a proper foundation that A* can use.
+
+#### Grid (map handling)
+I created a `Grid` class to own the map (stored as `std::vector<std::string>`).  
+The Grid is responsible for:
+- Printing the map to the console
+- Finding the Start `S` and Goal `G` automatically
+- Checking if a coordinate is valid using `withinGrid(r, c)`
+- Checking if movement is allowed using `canMoveTo(r, c)` (walls are `#`)
+
+I also added a `cellAt(r, c)` helper so the rest of the program doesn’t directly index the grid everywhere.
+
+#### Pos (coordinates)
+I added:
+```cpp
+struct Pos { int r; int c; };
+
+
+<img width="1103" height="603" alt="image" src="https://github.com/user-attachments/assets/107c3daf-d955-4e4d-8f79-92330630d395" />
+<img width="1711" height="727" alt="image" src="https://github.com/user-attachments/assets/fdfe22c0-7305-4e60-8cf7-6630a2fe4cbe" />
+<img width="885" height="825" alt="image" src="https://github.com/user-attachments/assets/4e431d84-81a5-4da9-8e37-b7ecf75c2c05" />
+<img width="1275" height="887" alt="image" src="https://github.com/user-attachments/assets/3ead13d7-b0b7-4b9a-b8fa-014a69a29336" />
+<img width="905" height="534" alt="image" src="https://github.com/user-attachments/assets/7665217c-cb55-46a9-8d0a-d53a519e9afc" />
+<img width="1440" height="861" alt="image" src="https://github.com/user-attachments/assets/438bbd6a-2015-4c6c-9eac-8d2dbf892a9f" />
+
+
 
 
