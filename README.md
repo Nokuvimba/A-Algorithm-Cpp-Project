@@ -54,17 +54,44 @@ The Grid is responsible for:
 I also added a `cellAt(r, c)` helper so the rest of the program doesn’t directly index the grid everywhere.
 
 #### Pos (coordinates)
-I added:
-```cpp
-struct Pos { int r; int c; };
+I added: `
+struct Pos { int r; int c; };` : This keeps row/column together as one variable and makes the code easier to read.
+<img width="905" height="400" alt="image" src="https://github.com/user-attachments/assets/4e431d84-81a5-4da9-8e37-b7ecf75c2c05" />
+
+#### Manhattan heuristic
+I implemented Manhattan distance: `abs(a.r - b.r) + abs(a.c - b.c)`
+This is the correct heuristic when movement is only up/down/left/right and there are no diagonal moves. this value is an estimate (guidance for A*), not the final path length.
+<img width="905" height="400" alt="image" src="https://github.com/user-attachments/assets/7665217c-cb55-46a9-8d0a-d53a519e9afc" />
+<img width="905" height="400" alt="image" src="https://github.com/user-attachments/assets/438bbd6a-2015-4c6c-9eac-8d2dbf892a9f" />
+#### Neighbour generation (4 directions)
+I added neighbour generation using 4-direction movement:
+	•	Up, Down, Left, Right
+Each neighbour is checked using canMoveTo() so we never go out of bounds or into walls.
+
+####Output 
+<img width="905" height="400" alt="image" src="https://github.com/user-attachments/assets/107c3daf-d955-4e4d-8f79-92330630d395" />
+Detected positions:
+	•	Start = (0,0) because S is at row 0, col 0
+	•	Goal  = (2,2) because G is at row 2, col 2
+
+Manhattan distance:
+	•	|0 - 2| + |0 - 2| = 2 + 2 = 4
+
+Neighbours of Start (0,0):
+	•	Up (-1,0) is out of bounds 
+	•	Left (0,-1) is out of bounds 
+	•	Down (1,0) is valid and walkable 
+	•	Right (0,1) is valid and walkable 
+
+The goal G is fully surrounded by #, so there is no valid path in this test map.
+This is a useful edge-case because when A* is implemented fully, the program should correctly report “No path found”.
+
+##### This is my main.cpp and Grid.cpp
+<img width="405" height="400" alt="image" src="https://github.com/user-attachments/assets/fdfe22c0-7305-4e60-8cf7-6630a2fe4cbe" />
+
+<img width="405" height="400" alt="image" src="https://github.com/user-attachments/assets/3ead13d7-b0b7-4b9a-b8fa-014a69a29336" />
 
 
-<img width="1103" height="603" alt="image" src="https://github.com/user-attachments/assets/107c3daf-d955-4e4d-8f79-92330630d395" />
-<img width="1711" height="727" alt="image" src="https://github.com/user-attachments/assets/fdfe22c0-7305-4e60-8cf7-6630a2fe4cbe" />
-<img width="885" height="825" alt="image" src="https://github.com/user-attachments/assets/4e431d84-81a5-4da9-8e37-b7ecf75c2c05" />
-<img width="1275" height="887" alt="image" src="https://github.com/user-attachments/assets/3ead13d7-b0b7-4b9a-b8fa-014a69a29336" />
-<img width="905" height="534" alt="image" src="https://github.com/user-attachments/assets/7665217c-cb55-46a9-8d0a-d53a519e9afc" />
-<img width="1440" height="861" alt="image" src="https://github.com/user-attachments/assets/438bbd6a-2015-4c6c-9eac-8d2dbf892a9f" />
 
 
 
