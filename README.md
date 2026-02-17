@@ -68,7 +68,7 @@ I added neighbour generation using 4-direction movement:
 	•	Up, Down, Left, Right
 Each neighbour is checked using canMoveTo() so we never go out of bounds or into walls.
 
-####Output 
+#### Output 
 <img width="905" height="400" alt="image" src="https://github.com/user-attachments/assets/107c3daf-d955-4e4d-8f79-92330630d395" />
 Detected positions:
 	•	Start = (0,0) because S is at row 0, col 0
@@ -91,7 +91,8 @@ This is a useful edge-case because when A* is implemented fully, the program sho
 
 <img width="405" height="400" alt="image" src="https://github.com/user-attachments/assets/3ead13d7-b0b7-4b9a-b8fa-014a69a29336" />
 
-
+ ###### In Summary
+Grid is responsible for storing and validating the map. It finds S and G, checks bounds and movement rules, and prints the grid. AStar currently contains the two main building blocks needed for the full algorithm: Manhattan heuristic and neighbour generation. main.cpp just runs the demo to verify everything before implementing the full open/closed sets next.
 
 
 
