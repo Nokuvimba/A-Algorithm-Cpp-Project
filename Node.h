@@ -10,11 +10,11 @@ a node in the grid, stores its position, g cost, h cost, f cost, and parent node
 #ifndef NODE_H
 #define NODE_H
 
-#include "Grid.h"
+#include "Grid.h" //to get Pos
 
 // A* works with nodes (a position + costs)
 struct Node {
-    Pos pos;
+    Pos pos;  //current grid position
     int g;   //how many steps from Start to here (real cost so far)
     int h;   // estimated steps from here to Goal (Manhattan)
     int f;   // total score used to choose what to explore next = g + h
@@ -23,7 +23,7 @@ struct Node {
 //give the node with the smallest f first
 struct NodeCompare {
     bool operator()(const Node& a, const Node& b) const {
-        if (a.f == b.f) {
+        if (a.f == b.f) { //if two nodes have the same f, break the tie by prferring h
             
             return a.h > b.h;
         }
