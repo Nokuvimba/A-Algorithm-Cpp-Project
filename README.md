@@ -104,6 +104,7 @@ Grid is responsible for storing and validating the map. It finds S and G, checks
 <img width="1325" height="870" alt="image" src="https://github.com/user-attachments/assets/06357436-a5fd-4a14-aa93-4d399d3de1f2" />
 <img width="989" height="677" alt="image" src="https://github.com/user-attachments/assets/c5dbc17c-26bc-4bbd-bb88-e3596b7c9a4d" />
 <img width="989" height="677" alt="image" src="https://github.com/user-attachments/assets/73510688-0042-4924-a0a8-a0006403fb4b" />
+<img width="1902" height="1018" alt="image" src="https://github.com/user-attachments/assets/1b32a5ef-6a8b-4ba3-831b-2e7034ed3cea" />
 
 
 
