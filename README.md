@@ -17,7 +17,8 @@ while still meeting the requirement of C++11 or higher.  https://www.geeksforgee
 - `AStar.h/.cpp` – A* algorithm implementation
 
 ## **What is A-Star Algorithm**
-Read to understand the concept of the A*algorithm and looked and sample code :https://www.geeksforgeeks.org/dsa/a-search-algorithm/ , https://github.com/JDSherbert/A-Star-Pathfinding
+It is a technique used in path-finding and graph traversals.
+I read to understand the concept of the A*algorithm and looked at sample code :https://www.geeksforgeeks.org/dsa/a-search-algorithm/ , https://github.com/JDSherbert/A-Star-Pathfinding
 
 ### **Project Idea**
 
