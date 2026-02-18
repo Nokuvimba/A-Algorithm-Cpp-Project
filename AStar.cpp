@@ -93,23 +93,28 @@ std::vector<Pos> AStar::findPath(const Grid& grid) const {
 
     const int INF = std::numeric_limits<int>::max();
 
+	//cheapest known cost to reach each cell from start, initialized to infinity
     std::vector<std::vector<int>> gScore(
         grid.rowCount(),
         std::vector<int>(grid.colCount(), INF)
     );
 
+	//where we came from to reach each cell, initialized to (-1, -1) meaning no parent
     std::vector<std::vector<Pos>> parent(
         grid.rowCount(),
         std::vector<Pos>(grid.colCount(), { -1, -1 })
     );
 
+	//which cells are already processed, initialized to false
     std::vector<std::vector<bool>> closedSet(
         grid.rowCount(),
         std::vector<bool>(grid.colCount(), false)
     );
 
+	//priority queue to explore nodes, ordered by lowest f score (g + h)
     std::priority_queue<Node, std::vector<Node>, NodeCompare> openSet;
 
+	// Initialize the start node
     gScore[start.r][start.c] = 0;
 
     Node startNode;
@@ -120,27 +125,29 @@ std::vector<Pos> AStar::findPath(const Grid& grid) const {
 
     openSet.push(startNode);
 
-    while (!openSet.empty()) {
-        Node current = openSet.top();
-        openSet.pop();
+	while (!openSet.empty()) { // while there are nodes to explore (open set is not empty)
+		Node current = openSet.top(); // get the node with the lowest f score
+		openSet.pop();// remove it from the open set
 
-        Pos p = current.pos;
+        Pos p = current.pos; 
 
-        if (closedSet[p.r][p.c]) continue;
+		if (closedSet[p.r][p.c]) continue; // if we already processed this cell, skip it
 
-        closedSet[p.r][p.c] = true;
+		closedSet[p.r][p.c] = true; // marking cell as processed
 
+		// If we reached the goal, reconstruct and return the path
         if (p.r == goal.r && p.c == goal.c) {
             return reconstructPath(start, goal, parent);
         }
 
-        auto neighbours = getNeighbours(grid, p);
+		auto neighbours = getNeighbours(grid, p); // get valid neighboring cells (up, down, left, right)
 
         for (const auto& n : neighbours) {
             if (closedSet[n.r][n.c]) continue;
 
             int tentativeG = gScore[p.r][p.c] + 1; // cost per move = 1
 
+			//if this path is cheaper than any previously known path to n, update gScore and parent, and add n to the open set
             if (tentativeG < gScore[n.r][n.c]) {
                 gScore[n.r][n.c] = tentativeG;
                 parent[n.r][n.c] = p;
