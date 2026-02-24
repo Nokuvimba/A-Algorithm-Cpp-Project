@@ -10,35 +10,31 @@ stores the grid, prints it, knows what’s walkable. It basically defines what a G
 #ifndef GRID_H
 #define GRID_H
 
-#include <vector>
+#include "Pos.h"
 #include <string>
-
-struct Pos {
-    int r; //row index
-    int c; //column index
-};
+#include <vector>
 
 class Grid {
 public:
     Grid();
+    explicit Grid(std::vector<std::string> data);
 
-	void print() const; // prints the grid to the console
+    void print() const;
 
-	bool withinGrid(int r, int c) const; // checks if (r, c) is a valid position in the grid
-	bool canMoveTo(int r, int c) const; // checks if you can move to (r, c) (i.e., if a cell isn't a wall)
+    int  rowCount() const;
+    int  colCount() const;
 
-	char cellAt(int r, int c) const; // returns the character at (r, c) (e.g., '.', '#', 'S', 'G')
+    char cellAt(int r, int c) const;
+    bool withinGrid(int r, int c) const;
+    bool canMoveTo(int r, int c) const;
 
-	// Finds the position of the start (S) and goal (G) in the grid
     Pos findStart() const;
-    Pos findGoal() const;
-
-	// Returns the number of rows and columns in the grid (dimensions)
-    int rowCount() const;
-    int colCount() const;
+    Pos findGoal()  const;
 
 private:
-    std::vector<std::string> gridData; //This is the actual map stored inside the Grid object. It’s private so only Grid controls how it’s accessed.
+    Pos findMarker(char marker) const;
+
+    std::vector<std::string> data_;
 };
 
 #endif // GRID_H
