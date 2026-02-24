@@ -11,18 +11,18 @@ runs the algorithm and returns the path
 #ifndef ASTAR_H
 #define ASTAR_H
 
-#include "Grid.h" // for Pos and Grid definitions
-#include <vector>
+#include "Grid.h"
 #include "Node.h"
+#include <vector>
 
 class AStar {
 public:
-	void demoBasics() const;   //prints the grid, start/goal positions, Manhattan distance.
+    void demoBasics(const Grid& grid) const;
     std::vector<Pos> findPath(const Grid& grid) const;
 
 private:
-    int manhattan(Pos a, Pos b) const; //returns estimated distance from a to b
-    std::vector<Pos> getNeighbours(const Grid& grid, Pos p) const; //
+    int manhattan(Pos a, Pos b) const;
+    std::vector<Pos> neighbours(const Grid& grid, Pos p) const;
 
     std::vector<Pos> reconstructPath(
         Pos start,
