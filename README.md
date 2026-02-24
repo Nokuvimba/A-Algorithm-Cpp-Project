@@ -100,6 +100,26 @@ This is a useful edge-case because when A* is implemented fully, the program sho
 Grid is responsible for storing and validating the map. It finds S and G, checks bounds and movement rules, and prints the grid. AStar currently contains the two main building blocks needed for the full algorithm: Manhattan heuristic and neighbour generation. main.cpp just runs the demo to verify everything before implementing the full open/closed sets next.
 
 ## Week 2  (17/02/2026)
+### What I implemented
+The core A* search algorithm using the Grid and heuristic foundations built in Week 1.
+#### Node Structure
+To support A*, I created a separate Node.h file containing a Node structure:
+`struct Node { `
+
+  ` Pos pos;` 
+  
+   ` int g;  // real cost from Start to current node`
+   
+    `int h;  // heuristic estimate from current node to Goal`
+	
+    `int f;  // total cost (f = g + h)`
+	
+	`};`
+### This is my Understanding
+• `g` represents how many steps have been taken from the Start to the current node.
+• `h` uses the Manhattan heuristic to estimate the remaining distance to the Goal.
+• `f = g + h` determines which node should be explored next.
+
 <img width="1112" height="624" alt="image" src="https://github.com/user-attachments/assets/80e1a2c7-8ba6-4f47-b2c8-7e4bde5136fb" />
 <img width="1325" height="870" alt="image" src="https://github.com/user-attachments/assets/06357436-a5fd-4a14-aa93-4d399d3de1f2" />
 <img width="989" height="677" alt="image" src="https://github.com/user-attachments/assets/c5dbc17c-26bc-4bbd-bb88-e3596b7c9a4d" />
