@@ -115,12 +115,80 @@ To support A*, I created a separate Node.h file containing a Node structure:
     `int f;  // total cost (f = g + h)`
 	
 	`};`
-### This is my Understanding
+#### This is my Understanding
+
 • `g` represents how many steps have been taken from the Start to the current node.
+
 • `h` uses the Manhattan heuristic to estimate the remaining distance to the Goal.
+
 • `f = g + h` determines which node should be explored next.
 
+#### Priority Queue (Open Set)
+To implement the A* open set, I used:
+
+`std::priority_queue<Node, std::vector<Node>, NodeCompare>`
+
+With a custom comparator:
+`struct NodeCompare {`
+
+	` bool operator()(const Node& a, const Node& b) const {`
+	
+			` if (a.f == b.f)`
+			
+				` return a.h > b.h;`
+				
+			` return a.f > b.f;`
+			
+		` }`
+		
+	`};`
+#### From my understanding
+
+• The open set stores nodes that are candidates for exploration.
+
+• The node with the smallest f value is explored first.
+
+• If two nodes have equal f, the one with the smaller h is preferred.
+
+• This improves search efficiency and keeps the algorithm optimal.
+
+#### Closed Set
+I implemented a 2D boolean vector: `std::vector<std::vector<bool>> closedSet;`
+This marks the nodes that have already been explored and prevents revisiting the same position.
+
+#### A* Core Algorithm (findPath)
+The findPath() function now:
+
+1. Retrieves the Start and Goal from the Grid.
+
+2. Pushes the Start node into the open set.
+
+3. Repeatedly:
+
+Selects the node with the lowest f.
+
+	• Checks if it is the Goal.
+	
+	• Marks it as closed.
+	
+	• Expands valid neighbours.
+	
+	• Calculates new g, h, and f values.
+	
+	• Pushes neighbours into the open set.
+
+4. Stops when:
+
+	• The Goal is reached, or
+	
+	• The open set becomes empty (no path exists).
+
+### A* Core Algorithm (findPath)
+The findPath() function first gets the Start and Goal from the grid, then pushes the Start node into the open set. It repeatedly selects the node with the lowest `f` value, checks if it is the Goal, marks it as closed, expands its valid neighbours, calculates their `g`, `h`, and `f` values, and adds them to the open set.
+
+The algorithm stops when the Goal is reached or when the open set becomes empty, meaning no path exists.
 <img width="1112" height="624" alt="image" src="https://github.com/user-attachments/assets/80e1a2c7-8ba6-4f47-b2c8-7e4bde5136fb" />
+In this case the Goal G is completely surrounded by walls (#), meaning no valid path exists. Which is why ` No path found.`
 <img width="1325" height="870" alt="image" src="https://github.com/user-attachments/assets/06357436-a5fd-4a14-aa93-4d399d3de1f2" />
 <img width="989" height="677" alt="image" src="https://github.com/user-attachments/assets/c5dbc17c-26bc-4bbd-bb88-e3596b7c9a4d" />
 <img width="989" height="677" alt="image" src="https://github.com/user-attachments/assets/73510688-0042-4924-a0a8-a0006403fb4b" />
