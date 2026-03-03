@@ -99,99 +99,131 @@ This is a useful edge-case because when A* is implemented fully, the program sho
  ###### In Summary
 Grid is responsible for storing and validating the map. It finds S and G, checks bounds and movement rules, and prints the grid. AStar currently contains the two main building blocks needed for the full algorithm: Manhattan heuristic and neighbour generation. main.cpp just runs the demo to verify everything before implementing the full open/closed sets next.
 
-## Week 2  (17/02/2026)
-### What I implemented
-The core A* search algorithm using the Grid and heuristic foundations built in Week 1.
-#### Node Structure
-To support A*, I created a separate Node.h file containing a Node structure:
-`struct Node { `
+## Week 2 (17/02/2026)
 
-  ` Pos pos;` 
-  
-   ` int g;  // real cost from Start to current node`
-   
-    `int h;  // heuristic estimate from current node to Goal`
-	
-    `int f;  // total cost (f = g + h)`
-	
-	`};`
-#### This is my Understanding
+**Goal:** To implement the core A* search algorithm using the Grid and heuristic foundations built in Week 1.
 
-• `g` represents how many steps have been taken from the Start to the current node.
+---
 
-• `h` uses the Manhattan heuristic to estimate the remaining distance to the Goal.
+### Node Structure
 
-• `f = g + h` determines which node should be explored next.
-
-#### Priority Queue (Open Set)
-To implement the A* open set, I used:
-
-`std::priority_queue<Node, std::vector<Node>, NodeCompare>`
-
-With a custom comparator:
-`struct NodeCompare {`
-
-	` bool operator()(const Node& a, const Node& b) const {`
-	
-			` if (a.f == b.f)`
-			
-				` return a.h > b.h;`
-				
-			` return a.f > b.f;`
-			
-		` }`
-		
-	`};`
-#### From my understanding
-
-• The open set stores nodes that are candidates for exploration.
-
-• The node with the smallest f value is explored first.
-
-• If two nodes have equal f, the one with the smaller h is preferred.
-
-• This improves search efficiency and keeps the algorithm optimal.
-
-#### Closed Set
-I implemented a 2D boolean vector: `std::vector<std::vector<bool>> closedSet;`
-This marks the nodes that have already been explored and prevents revisiting the same position.
-
-#### A* Core Algorithm (findPath)
-The findPath() function now:
-
-1. Retrieves the Start and Goal from the Grid.
-
-2. Pushes the Start node into the open set.
-
-3. Repeatedly:
-
-Selects the node with the lowest f.
-
-	• Checks if it is the Goal.
-	
-	• Marks it as closed.
-	
-	• Expands valid neighbours.
-	
-	• Calculates new g, h, and f values.
-	
-	• Pushes neighbours into the open set.
-
-4. Stops when:
-
-	• The Goal is reached, or
-	
-	• The open set becomes empty (no path exists).
-
-### A* Core Algorithm (findPath)
-The findPath() function first gets the Start and Goal from the grid, then pushes the Start node into the open set. It repeatedly selects the node with the lowest `f` value, checks if it is the Goal, marks it as closed, expands its valid neighbours, calculates their `g`, `h`, and `f` values, and adds them to the open set.
-
-The algorithm stops when the Goal is reached or when the open set becomes empty, meaning no path exists.
-<img width="1112" height="624" alt="image" src="https://github.com/user-attachments/assets/80e1a2c7-8ba6-4f47-b2c8-7e4bde5136fb" />
-In this case the Goal G is completely surrounded by walls (#), meaning no valid path exists. Which is why ` No path found.`
-<img width="1325" height="870" alt="image" src="https://github.com/user-attachments/assets/06357436-a5fd-4a14-aa93-4d399d3de1f2" />
+To support A*, I created a separate `Node.h` file containing a `Node` structure:
 <img width="989" height="677" alt="image" src="https://github.com/user-attachments/assets/c5dbc17c-26bc-4bbd-bb88-e3596b7c9a4d" />
-<img width="989" height="677" alt="image" src="https://github.com/user-attachments/assets/73510688-0042-4924-a0a8-a0006403fb4b" />
+
+```cpp
+struct Node {
+    Pos pos;
+    int g;  // real cost from Start to current node
+    int h;  // heuristic estimate from current node to Goal
+    int f;  // total cost (f = g + h)
+};
+```
+
+#### My Understanding
+
+- `g` represents how many steps have been taken from Start to the current node.
+- `h` uses the Manhattan heuristic to estimate the remaining distance to the Goal.
+- `f = g + h` determines which node should be explored next — the lower the `f`, the more promising the path.
+- Separating position data (`Pos`) from cost data (`Node`) keeps the code modular and easier to reason about.
+
+---
+
+### Priority Queue (Open Set)
+
+To implement the A* open set, I used `std::priority_queue` with a custom comparator:
+
+```cpp
+std::priority_queue<Node, std::vector<Node>, NodeCompare>
+
+struct NodeCompare {
+    bool operator()(const Node& a, const Node& b) const {
+        if (a.f == b.f)
+            return a.h > b.h;
+        return a.f > b.f;
+    }
+};
+```
+
+#### Understanding
+
+- The open set holds all candidate nodes waiting to be explored.
+- The node with the smallest `f` is always explored first (min-heap behaviour).
+- When two nodes share the same `f`, the one with the smaller `h` is preferred — this breaks ties in favour of nodes that are closer to the Goal.
+- This keeps the algorithm optimal while reducing unnecessary exploration.
+
+---
+
+### Closed Set
+
+```cpp
+std::vector<std::vector<bool>> closedSet;
+```
+
+#### Understanding
+
+- Once a node is fully explored, it is added to the closed set.
+- This prevents the algorithm from revisiting the same position with a worse cost.
+- Without this, the algorithm could loop indefinitely on open grids.
+
+---
+
+### A* Core Algorithm (`findPath`)
+
+The `findPath()` function brings all the pieces together:
+
+1. Retrieves Start `S` and Goal `G` from the Grid.
+2. Pushes the Start node (with `g = 0`) into the open set.
+3. Repeatedly:
+   - Selects the node with the lowest `f`.
+   - If it is the Goal → path found, stop.
+   - Marks it as closed (visited).
+   - Expands each valid neighbour.
+   - Calculates new `g`, `h`, and `f` for each neighbour.
+   - Pushes neighbours into the open set.
+4. Stops when the Goal is reached **or** the open set is empty (no path exists).
+
+---
+
+### Edge Case: Blocked Goal
+<img width="1112" height="624" alt="image" src="https://github.com/user-attachments/assets/80e1a2c7-8ba6-4f47-b2c8-7e4bde5136fb" />
+Test grid used:
+
+```
+S....
+.###.
+.#G#.
+.###.
+.....
+```
+
+The Goal `G` is completely surrounded by walls `#`, so no valid path exists.
+
+**Console output:**
+```
+No path found.
+```
+
+#### Understanding
+
+- This confirms that neighbour validation (`canMoveTo`) works correctly.
+- The closed set correctly prevents the algorithm from revisiting cells.
+- The algorithm terminates safely rather than looping forever.
+- Testing a "no path" case before implementing path reconstruction is important — it verifies the core loop is correct before adding more complexity.
+
+---
+
+### Path Reconstruction (Prepared, Not Yet Complete)
+
+In `main.cpp` I added a `printPathOnGrid()` helper that:
+- Takes a copy of the grid (so the original is not modified).
+- Overlays `*` characters onto path cells between Start and Goal.
+<img width="1325" height="870" alt="image" src="https://github.com/user-attachments/assets/06357436-a5fd-4a14-aa93-4d399d3de1f2" />
+**Next step:** implement parent tracking inside `findPath()` so the path can be traced back from Goal to Start, then passed to `printPathOnGrid()` for display.
+
+---
+
+
+
 <img width="1902" height="1018" alt="image" src="https://github.com/user-attachments/assets/1b32a5ef-6a8b-4ba3-831b-2e7034ed3cea" />
 
 
