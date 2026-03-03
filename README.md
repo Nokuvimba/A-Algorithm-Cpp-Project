@@ -221,10 +221,194 @@ In `main.cpp` I added a `printPathOnGrid()` helper that:
 **Next step:** implement parent tracking inside `findPath()` so the path can be traced back from Goal to Start, then passed to `printPathOnGrid()` for display.
 
 ---
+## Week 3 (24/02/2026)
 
+**Goal:** To refactor the existing code using the C++ Core Guidelines without changing what the algorithm does.
 
+---
 
+### What are the C++ Core Guidelines?
 <img width="1902" height="1018" alt="image" src="https://github.com/user-attachments/assets/1b32a5ef-6a8b-4ba3-831b-2e7034ed3cea" />
+Key rules I applied:
+
+| Guideline | Rule |
+|---|---|
+| `F.3` | Keep functions short and focused on one task |
+| `F.17` | Use `[[nodiscard]]` when ignoring a return value is almost certainly a bug |
+| `C.45` | Don't define a default constructor that only initialises data members |
+| `Enum.3` | Prefer `enum class` over plain `enum` |
+| `Con.1` | By default, make variables `const` |
+| `ES.20` | Always initialise variables at the point of declaration |
+| `I.3` | Avoid singletons — pass dependencies explicitly |
+
+---
+
+### Change 1 — `[[nodiscard]]` on `findPath()`
+
+```cpp
+// Before
+std::vector<Pos> findPath(const Grid& grid) const;
+
+// After
+[[nodiscard]] std::vector<Pos> findPath(const Grid& grid) const;
+```
+
+#### Understanding
+
+`[[nodiscard]]` is a C++17 attribute that tells the compiler: *"warn if the caller throws this return value away."*
+
+Without it, a developer could accidentally write:
+
+```cpp
+astar.findPath(grid);   // result silently discarded — no warning
+```
+
+With `[[nodiscard]]`, the compiler produces a warning immediately and makes the function **harder to misuse**.
+
+---
+
+### Change 2 — `enum class Heuristic` (adding Euclidean)
+
+```cpp
+// Before — no choice of heuristic existed at all
+
+// After
+enum class Heuristic { Manhattan, Euclidean };
+```
+
+And a new dispatch function:
+
+```cpp
+int AStar::estimate(Pos a, Pos b) const {
+    switch (heuristic_) {
+        case Heuristic::Euclidean: return euclidean(a, b);
+        default:                   return manhattan(a, b);
+    }
+}
+```
+
+#### Understanding
+
+**Why `enum class` and not plain `enum`?**
+
+A plain `enum` leaks its values into the surrounding scope, which can cause name collisions:
+
+```cpp
+enum Heuristic { Manhattan, Euclidean };
+int Manhattan = 5;   //  name clash — won't compile
+```
+
+An `enum class` keeps its values scoped:
+
+```cpp
+enum class Heuristic { Manhattan, Euclidean };
+int Manhattan = 5;   //  no clash — they are different things
+```
+
+**Why a dispatch function `estimate()`?**
+
+Previously, `findPath()` called `manhattan()` directly — hardcoded. Now `estimate()` reads the `heuristic_` member and picks the right function. This means l can change heuristic at construction time and the rest of the algorithm doesn't change at all:
+
+```cpp
+AStar defaultSearch;                           // Manhattan
+AStar euclideanSearch(Heuristic::Euclidean);   // Euclidean
+```
+
+---
+
+### Change 3 — `const` by default
+
+```cpp
+// Before
+Pos start = grid.findStart();
+AStar astar;
+
+// After
+const Pos  start = grid.findStart();
+const AStar astar;
+```
+
+#### Understanding
+
+The Core Guidelines say: **make everything `const` unless you know you need to mutate it.**
+
+If `start` is `const` and something accidentally tries to change it later, the compiler stops it immediately. Without `const`, that bug could go unnoticed.
+
+---
+
+### Change 4 — `[[nodiscard]]` tie-breaking in `NodeCompare`
+
+```cpp
+struct NodeCompare {
+    bool operator()(const Node& a, const Node& b) const {
+        return a.f == b.f ? a.h > b.h : a.f > b.f;
+    }
+};
+```
+
+#### Understanding
+
+The comparator now uses a single-line ternary expression instead of a nested `if`. This keeps the function short (Core Guideline `F.3`) and makes the logic easier to read at a glance: *"if f values tie, prefer smaller h; otherwise prefer smaller f."*
+
+---
+
+### Change 5 — Removed magic numbers
+
+```cpp
+// Before — what does 1 mean here?
+const int tentativeG = g[p.r][p.c] + 1;
+
+// After — named constant, meaning is clear
+constexpr int MOVE_COST = 1;   // uniform cost — will become terrain cost later
+const int tentativeG = g[p.r][p.c] + MOVE_COST;
+```
+
+#### Understanding
+
+A "magic number" is a raw value in code with no explanation. `+ 1` could mean anything. `+ MOVE_COST` makes the intent clear, and it marks exactly where the code needs to change when weighted terrain is added — which is next.
+
+---
+
+### Change 6 — `runTest()` helper in `main.cpp`
+
+```cpp
+static void runTest(const std::string& name, const Grid& grid) {
+    const AStar astar;
+    std::cout << "\n--- Test: " << name << " ---\n";
+    grid.print();
+    const auto path = astar.findPath(grid);
+    if (path.empty()) {
+        std::cout << "No path found.\n";
+    } else {
+        std::cout << "Path found! Steps = " << path.size() - 1 << '\n';
+        printPathOnGrid(grid, path);
+    }
+}
+```
+
+#### Understanding
+
+Before this, `main()` repeated the same print/run/check logic for every test. The Core Guideline `F.3` says functions should do **one thing**. Extracting `runTest()` means:
+
+- `main()` is now just a list of test cases — easy to read
+- The test logic lives in one place — easy to change
+- Adding a new test is one line instead of five
+
+---
+
+### Test Cases Added
+
+| Test | Grid | Expected |
+|---|---|---|
+| Default (enclosed goal) | `S` blocked by `#` ring | No path |
+| Open grid | Clear path to `G` | Path found |
+| Maze | Winding route through walls | Path found |
+| Start adjacent to Goal | `SG` | 1 step |
+| Fully blocked | `S#G` | No path |
+
+---
+
+
 
 
 
