@@ -3,7 +3,7 @@
 A* Algorithm Project
 Author: Nokuvimba Natalie Chiyaka
 Start Date: 04/02/2026
-stores the grid, prints it, knows what’s walkable
+stores the grid, prints it, knows what's walkable
 =========================================
 */
 
