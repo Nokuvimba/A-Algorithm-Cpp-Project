@@ -63,6 +63,8 @@ std::vector<Pos> AStar::findPath(const Grid& grid) const {
     const int h0 = manhattan(start, goal);
     open.push({ start, 0, h0, h0 });
 
+    int nodesExpanded = 0;
+
     while (!open.empty()) {
         const Node cur = open.top();
         open.pop();
@@ -73,10 +75,13 @@ std::vector<Pos> AStar::findPath(const Grid& grid) const {
         if (closed[p.r][p.c]) continue;
         closed[p.r][p.c] = true;
 
-        // Early exit: path to goal found
-        if (p == goal)
-            return reconstructPath(start, goal, parent);
+        ++nodesExpanded; 
 
+        // Early exit: path to goal found
+        if (p == goal) {
+            std::cout << "Nodes expanded: " << nodesExpanded << '\n';
+            return reconstructPath(start, goal, parent);
+        }
         // Expand each walkable neighbour
         for (const Pos& n : neighbours(grid, p)) {
             if (closed[n.r][n.c]) continue;
@@ -92,7 +97,7 @@ std::vector<Pos> AStar::findPath(const Grid& grid) const {
             }
         }
     }
-
+    std::cout << "Nodes expanded: " << nodesExpanded << '\n';
     return {}; // No path found
 }
 
