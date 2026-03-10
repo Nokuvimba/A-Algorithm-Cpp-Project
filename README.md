@@ -223,7 +223,7 @@ In `main.cpp` I added a `printPathOnGrid()` helper that:
 ---
 ## Week 3 (24/02/2026)
 
-**Goal:** To refactor the existing code using the C++ Core Guidelines without changing what the algorithm does.
+**Goal:** To refactor the existing code using the C++ Core Guidelines without changing what the algorithm does. I also added sme tests.
 
 ---
 
@@ -242,6 +242,8 @@ Key rules I applied:
 | `I.3` | Avoid singletons — pass dependencies explicitly |
 
 ---
+### Why l separated the files per module(function)
+So that it would be easy to edit and add new things accordingly.
 
 ### Change 1 — `[[nodiscard]]` on `findPath()`
 
