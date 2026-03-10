@@ -409,6 +409,137 @@ Before this, `main()` repeated the same print/run/check logic for every test. Th
 | Fully blocked | `S#G` | No path |
 
 ---
+## Week 4 (03/03/2026)
+
+**Goal:** Claude suggested three improvements to improve my code, this is my review on them and my decisions on which ones fit the scope of my project. I also cleaned the code accordingly.
+
+---
+
+### Suggested Improvements
+
+After completing the Week 3 refactor, Claude suggested I improve on the following 3 things:
+
+---
+
+#### 1. Weighted Terrain Cells
+
+Claude suggested that I introduce a `W` tile that costs 3 to enter so A* routes around expensive terrain instead of always treating every cell the same.
+
+**What it is:**
+Weighted terrain means different cells on the grid carry different costs to enter. Right now every move costs exactly 1, so A* simply finds the path with the fewest steps. With weighted terrain, a `W` tile could cost 3 and not 1 to step into - meaning that A* would calculate the total cost of a path rather than just counting steps. If a short path goes through two swamp tiles it might cost more overall than a longer path that avoids them entirely. A* would then correctly choose the longer but cheaper route. This is useful in real-world applications like game maps or navigation systems where some terrain is harder to cross than others.
+
+**Why I am not implementing it:**
+This project is a mini demonstration of how A* works. The goal is to show the algorithm finding the shortest path between a Start and a Goal on a simple grid. Weighted terrain belongs to a more advanced use case such as a game engine or a map routing tool, where the cost of movement varies realistically. Adding it here would go beyond the scope of the project without adding value to the algorithm demonstration itself. Uniform cost with Manhattan distance is the correct and complete approach for what this project needs.
+
+---
+
+#### 2. Load Grid From a File
+
+Claude suggested adding a static factory function to `Grid` that reads a `.txt` file at runtime so grids no longer need to be hardcoded inside `main.cpp`.
+
+**What it is:**
+Currently every test grid is written directly into the source code. File loading would mean the program opens a text file, reads each line as a row of the grid, and constructs a `Grid` from that data. The benefit is that you could design and test new maps without editing the source code or recompiling — you would just create a new `.txt` file and pass its name to the program. This is how most real pathfinding tools work: the map data lives separately from the program logic.
+
+**Why I am not implementing it:**
+For a mini project with a fixed set of test cases, hardcoded grids are clear and sufficient. The test cases already cover the important scenarios — open paths, mazes, blocked goals, and edge cases. File loading would introduce additional complexity around file path handling and error checking that adds no value to demonstrating how A* works. It would be a meaningful addition if this were a larger project designed to handle user-created maps.
+
+---
+
+#### 3. Node Expansion Counter
+
+Claude suggested adding a counter inside `findPath` that tracks how many nodes are popped off the open list and processed during the search.
+
+**What it is:**
+The node expansion counter is a way of measuring how much work A* is doing. Every time the algorithm takes a node off the open list and processes it, that is one expansion. Counting these gives a number that shows how efficiently the heuristic is guiding the search. A good heuristic guides A* directly toward the Goal with fewer expansions. A weaker heuristic leaves A* exploring more of the grid unnecessarily. 
+
+**Why I am implementing it:**
+This is a small, focused change that adds genuine insight into the algorithm's behaviour. It makes the search visible, I will be able to see exactly how hard A* is working on each test case.
+
+---
+
+### Code Cleanup — Removing Euclidean
+
+#### Why I removed Euclidean  
+
+In Week 3, I had added a `Heuristic` enum and Euclidean distance function to demonstrate extensibility:
+
+```cpp
+// AStar.h — before
+enum class Heuristic { Manhattan, Euclidean };
+
+explicit AStar(Heuristic h = Heuristic::Manhattan) : heuristic_(h) {}
+```
+
+```cpp
+// AStar_Heuristic.cpp — before
+int AStar::euclidean(Pos a, Pos b) const {
+    const double dr = static_cast<double>(a.r - b.r);
+    const double dc = static_cast<double>(a.c - b.c);
+    return static_cast<int>(std::sqrt(dr * dr + dc * dc));
+}
+
+int AStar::estimate(Pos a, Pos b) const {
+    switch (heuristic_) {
+        case Heuristic::Euclidean: return euclidean(a, b);
+        default:                   return manhattan(a, b);
+    }
+}
+```
+
+#### My Understanding on Why Manhattan is correct and Euclidean is not neccessarily needed
+
+Manhattan distance counts steps horizontally and vertically:
+
+```
+|a.r - b.r| + |a.c - b.c|
+```
+
+Euclidean distance measures straight-line distance:
+
+```
+sqrt((a.r - b.r)² + (a.c - b.c)²)
+```
+
+On this grid, movement is strictly **4-directional** — up, down, left, right. Diagonal movement is not allowed. This means:
+
+- Manhattan always gives an **exact or tight underestimate** of the real cost as it is admissible and well-suited to this movement model
+- Euclidean gives a **looser underestimate** because it assumes that one can travel diagonally, which I cannot. It still finds the correct path but guides the search less accurately
+
+For a 4-direction grid, Manhattan is the right heuristic. Euclidean would only be more appropriate if diagonal movement was required, which this project does not necessarily need.
+
+#### After cleanup
+
+```cpp
+// AStar.h — after
+class AStar {
+public:
+    AStar() = default;
+
+    [[nodiscard]] std::vector<Pos> findPath(const Grid& grid) const;
+    void demoBasics(const Grid& grid) const;
+
+private:
+    int manhattan(Pos a, Pos b) const;
+    std::vector<Pos> neighbours(const Grid& grid, Pos p) const;
+    std::vector<Pos> reconstructPath(
+        Pos start, Pos goal,
+        const std::vector<std::vector<Pos>>& parent) const;
+};
+```
+
+```cpp
+// AStar_Heuristic.cpp — after
+int AStar::manhattan(Pos a, Pos b) const {
+    return std::abs(a.r - b.r) + std::abs(a.c - b.c);
+}
+```
+
+I removed the `Heuristic` enum, `euclidean()`, and `estimate()` dispatcher. `findPath` now calls `manhattan()` directly .
+The output didn't change because Manhattan was always the default anyway.
+<img width="641" height="1017" alt="image" src="https://github.com/user-attachments/assets/34dcc6f2-1e7f-482d-a8af-cec098d4267c" />
+
+---
+
 
 
 
