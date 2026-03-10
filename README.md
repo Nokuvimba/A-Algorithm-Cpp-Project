@@ -539,6 +539,73 @@ The output didn't change because Manhattan was always the default anyway.
 <img width="641" height="1017" alt="image" src="https://github.com/user-attachments/assets/34dcc6f2-1e7f-482d-a8af-cec098d4267c" />
 
 ---
+## Week 5 (10/03/2026)
+
+**Goal:** Implementing the node expansion counter inside `findPath()` so the algorithm's effort is visible for each test case.
+
+---
+
+### What I Added
+
+A counter variable to `AStar_Path.cpp` inside `findPath()`:
+
+
+#### Before — no visibility into how much work A* is doing
+<img width="481" height="442" alt="image" src="https://github.com/user-attachments/assets/dcfb6c07-f65f-4a61-b1fe-b6f18c999b26" />
+
+ ####After — counter declared before the loop, incremented and printed inside it
+<img width="458" height="486" alt="image" src="https://github.com/user-attachments/assets/81a97386-b83b-4d2d-9f9d-1be3d8512a03" />
+
+
+#### My Understanding
+
+The counter sits **after** the lazy deletion check (`if (closed[p.r][p.c]) continue`). This is deliberate as it only counts nodes that are actually processed, not ones that are skipped because they were already visited. Counting skipped nodes would give a misleading number.
+
+The counter is printed in two places:
+1. when the Goal is reached 
+2. when no path exists
+-so that every test always reports a count.
+
+---
+
+### A Bug l Encountered
+
+During implementation the `if (p == goal)` block, it was written without curly braces:
+
+<img width="453" height="82" alt="image" src="https://github.com/user-attachments/assets/0c7cd0ab-bc38-46ce-9336-0254a45d7c60" />
+
+
+Without braces, only the `cout` line belongs to the `if`. The `return` line ran unconditionally on every loop iteration — meaning A* returned on the very first node (Start), which had no valid parent, so every test returned an empty path and printed "No path found."
+
+### Console Output before fixing the bug
+<img width="1659" height="961" alt="image" src="https://github.com/user-attachments/assets/974e7456-c4ec-4680-80d6-559a3687543f" />
+
+
+I had to follow the c++ guidelines. Even though the code was wrongly written, the compiler does not warn about it because the code is technically still valid. This is because indentation does not define scope, but braces do.
+
+---
+
+### Console Output after fixing the code
+
+<img width="573" height="986" alt="image" src="https://github.com/user-attachments/assets/6d91cade-35ed-462e-b3b4-c8d903f580b5" />
+
+
+---
+
+### Understanding the Results
+
+| Test | Nodes expanded | What it shows |
+|---|---|---|
+| Enclosed goal | 16 | A* explored the entire reachable area before confirming no path existed |
+| Open grid | 5 | Manhattan guided A* almost directly to the Goal — very efficient |
+| Maze grid | 9 | More exploration needed but still focused, not exhaustive |
+| Start adjacent to Goal | 2 | Start processed, Goal found on the first neighbour — trivial case |
+| Fully blocked | 1 | Only Start was processed, no walkable neighbours existed |
+
+The open grid result is the clearest demonstration of why Manhattan works well. A* found a 4-step path on a 5×5 grid (25 cells total) while only processing 5 nodes. The heuristic directed the search efficiently rather than exploring the grid blindly.
+
+---
+
 
 
 
