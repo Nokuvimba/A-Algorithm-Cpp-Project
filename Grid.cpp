@@ -33,6 +33,7 @@ void Grid::print() const {
     }
 }
 
+//rowCount() / colCount() — how many rows and columns the grid has. Used everywhere bounds need checking.
 int Grid::rowCount() const {
     return static_cast<int>(data_.size());
 }
@@ -41,19 +42,23 @@ int Grid::colCount() const {
     return data_.empty() ? 0 : static_cast<int>(data_[0].size());
 }
 
+// returns the character at that position. Used everywhere to check for walls, start, goal, etc.
 char Grid::cellAt(int r, int c) const {
     return data_[r][c];
 }
 
+//withinGrid(r, c) — is this coordinate even on the grid? Returns false if r or c would go out of bounds.
 bool Grid::withinGrid(int r, int c) const {
     return r >= 0 && c >= 0 &&
         r < rowCount() && c < colCount();
 }
 
+//the only place wall-checking happens. canMoveTo(r, c) returns true if the cell is within the grid and not a wall.
 bool Grid::canMoveTo(int r, int c) const {
     return withinGrid(r, c) && cellAt(r, c) != '#';
 }
 
+//both call the private findMarker() which scans every cell looking for S or G. Returns an invalid Pos if not found.
 Pos Grid::findStart() const { return findMarker('S'); }
 Pos Grid::findGoal()  const { return findMarker('G'); }
 

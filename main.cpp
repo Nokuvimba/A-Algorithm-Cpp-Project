@@ -55,9 +55,9 @@ int main()
     std::cout << "=== A* Pathfinding Demo ===\n";
 
     // --- Test 1: Default grid (goal surrounded by walls – no path) ---
-    const Grid defaultGrid;
+    const Grid defaultGrid;  // uses the no-argument constructor in Grid.cpp  — the hardcoded map with Goal surrounded by walls.
     const AStar astar;
-    astar.demoBasics(defaultGrid);
+    astar.demoBasics(defaultGrid); // prints the grid plus the Start/Goal positions and heuristic value. 
     runTest("Default grid (enclosed goal)", defaultGrid);
 
     // --- Test 2: Open grid – straightforward path ---
