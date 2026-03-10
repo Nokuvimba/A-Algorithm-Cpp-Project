@@ -60,7 +60,7 @@ std::vector<Pos> AStar::findPath(const Grid& grid) const {
     std::priority_queue<Node, std::vector<Node>, NodeCompare> open;
 
     g[start.r][start.c] = 0;
-    const int h0 = estimate(start, goal);
+    const int h0 = manhattan(start, goal);
     open.push({ start, 0, h0, h0 });
 
     while (!open.empty()) {
@@ -87,7 +87,7 @@ std::vector<Pos> AStar::findPath(const Grid& grid) const {
                 g[n.r][n.c] = tentativeG;
                 parent[n.r][n.c] = p;
 
-                const int h = estimate(n, goal);
+                const int h = manhattan(n, goal);
                 open.push({ n, tentativeG, h, tentativeG + h });
             }
         }
@@ -106,7 +106,7 @@ void AStar::demoBasics(const Grid& grid) const {
     std::cout << "\nStart = (" << start.r << ", " << start.c << ")\n"
         << "Goal  = (" << goal.r << ", " << goal.c << ")\n"
         << "Heuristic estimate (start -> goal) = "
-        << estimate(start, goal) << "\n"
+        << manhattan(start, goal) << "\n"
         << "\nNeighbours of Start:\n";
 
     for (const Pos& n : neighbours(grid, start))

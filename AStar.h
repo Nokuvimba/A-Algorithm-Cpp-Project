@@ -15,13 +15,11 @@ Declares the AStar class: runs the algorithm and returns the path
 #include "Node.h"
 #include <vector>
 
-// Supported heuristics – easy to extend with new options
-enum class Heuristic { Manhattan, Euclidean };
 
 class AStar {
 public:
     // Constructs with a chosen heuristic (default: Manhattan)
-    explicit AStar(Heuristic h = Heuristic::Manhattan) : heuristic_(h) {}
+    AStar() = default;
 
     // Prints grid basics and neighbour info (useful for demos/debugging)
     void demoBasics(const Grid& grid) const;
@@ -30,14 +28,12 @@ public:
     std::vector<Pos> findPath(const Grid& grid) const;
 
 private:
-    Heuristic heuristic_;
+  
 
     // Heuristic estimate from a to b
-    int estimate(Pos a, Pos b) const;
-
+  
     int manhattan(Pos a, Pos b) const;
-    int euclidean(Pos a, Pos b) const;
-
+  
     // Returns walkable orthogonal neighbours of p
     std::vector<Pos> neighbours(const Grid& grid, Pos p) const;
 
