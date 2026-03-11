@@ -72,7 +72,7 @@ std::vector<Pos> AStar::findPath(const Grid& grid) const {
         const Pos p = cur.pos;
 
         // Lazy deletion: skip if already processed with a lower cost
-        if (closed[p.r][p.c]) continue;
+        if (closed[p.r][p.c]) { continue; }
         closed[p.r][p.c] = true;
 
         ++nodesExpanded; 

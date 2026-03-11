@@ -63,9 +63,13 @@ Pos Grid::findStart() const { return findMarker('S'); }
 Pos Grid::findGoal()  const { return findMarker('G'); }
 
 Pos Grid::findMarker(char marker) const {
-    for (int r = 0; r < rowCount(); ++r)
-        for (int c = 0; c < colCount(); ++c)
-            if (cellAt(r, c) == marker)
+    for (int r = 0; r < rowCount(); ++r) {
+        for (int c = 0; c < colCount(); ++c) {
+            if (cellAt(r, c) == marker) {
                 return { r, c };
+            }
+        }
+    }
+        
     return {}; // invalid Pos
 }

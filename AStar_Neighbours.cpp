@@ -26,8 +26,9 @@ std::vector<Pos> AStar::neighbours(const Grid& grid, Pos p) const {
         int nr = p.r + DR[i];
         int nc = p.c + DC[i];
 
-        if (grid.canMoveTo(nr, nc))
+        if (grid.canMoveTo(nr, nc)) {
             result.push_back({ nr, nc });
+        }
     }
 
     return result;
