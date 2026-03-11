@@ -597,12 +597,19 @@ I had to follow the c++ guidelines, that say we have to put braces when using if
 
 After this bug l ended up going through my code to see if there's anywhere l don't have braces and applying the guideline
 In my main.cpp in my printPathOnGrid
+
 <img width="529" height="353" alt="image" src="https://github.com/user-attachments/assets/f65f56e0-5f91-452b-8334-74795e898252" />
+
  And in the Grid.cpp, the findMarker() had some missing braces.
+ 
  <img width="336" height="99" alt="image" src="https://github.com/user-attachments/assets/d4c8eccb-e96b-4269-8a8c-9ed5a0ec29fc" />
+ 
 In AStar_Path.cpp the lazy detection was missing braces 
+
 <img width="456" height="60" alt="image" src="https://github.com/user-attachments/assets/96217044-5eb4-4a7e-b29b-225f62089070" />
+
 And in the AStar_Neighbours.cpp
+
 <img width="485" height="234" alt="image" src="https://github.com/user-attachments/assets/5dfee718-0225-4006-ac51-d9147afffb36" />
 
 
