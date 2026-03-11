@@ -578,6 +578,7 @@ During implementation the `if (p == goal)` block, it was written without curly b
 Without braces, only the `cout` line belongs to the `if`. The `return` line ran unconditionally on every loop iteration — meaning A* returned on the very first node (Start), which had no valid parent, so every test returned an empty path and printed "No path found." This is because without braces, adding a second line to an if body silently breaks logic. I should have followed the ES.85 guideline regardless of having an inline fuction even befoe having to change code. I wouldn't have had the bug then. This made me realise how important it is to follow the coding rules even when it doesn't cost doing otherwise because it always will at some point. Just like it did with the crowd strike we've learnt  from the C++ module.
 
 ### ES.85 c++ Core Guidelines
+https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#es85-make-empty-statements-visible
 <img width="924" height="433" alt="image" src="https://github.com/user-attachments/assets/d45a51c0-5490-419e-9bdf-503c3f064aba" />
 
 
