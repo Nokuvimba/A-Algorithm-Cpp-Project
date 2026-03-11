@@ -575,13 +575,18 @@ During implementation the `if (p == goal)` block, it was written without curly b
 <img width="453" height="82" alt="image" src="https://github.com/user-attachments/assets/0c7cd0ab-bc38-46ce-9336-0254a45d7c60" />
 
 
-Without braces, only the `cout` line belongs to the `if`. The `return` line ran unconditionally on every loop iteration — meaning A* returned on the very first node (Start), which had no valid parent, so every test returned an empty path and printed "No path found."
+Without braces, only the `cout` line belongs to the `if`. The `return` line ran unconditionally on every loop iteration — meaning A* returned on the very first node (Start), which had no valid parent, so every test returned an empty path and printed "No path found." This is because without braces, adding a second line to an if body silently breaks logic. I should have followed the ES.85 guideline regardless of having an inline fuction even befoe having to change code. I wouldn't have had the bug then. This made me realise how important it is to follow the coding rules even when it doesn't cost doing otherwise because it always will at some point. Just like it did with the crowd strike we've learnt  from the C++ module.
+
+### ES.85 c++ Core Guidelines
+<img width="924" height="433" alt="image" src="https://github.com/user-attachments/assets/d45a51c0-5490-419e-9bdf-503c3f064aba" />
+
 
 ### Console Output before fixing the bug
 <img width="1659" height="961" alt="image" src="https://github.com/user-attachments/assets/974e7456-c4ec-4680-80d6-559a3687543f" />
 
 
-I had to follow the c++ guidelines. Even though the code was wrongly written, the compiler does not warn about it because the code is technically still valid. This is because indentation does not define scope, but braces do.
+I had to follow the c++ guidelines, that say we have to put braces when using if statements. Even though the code was wrongly written, the compiler does not warn about it because the code is technically still valid. This is because indentation does not define scope, but braces do.
+<img width="638" height="82" alt="image" src="https://github.com/user-attachments/assets/f8a072fc-2416-4d1b-915d-99a3c2e60deb" />
 
 ---
 
