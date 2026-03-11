@@ -595,6 +595,11 @@ I had to follow the c++ guidelines, that say we have to put braces when using if
 
 <img width="573" height="986" alt="image" src="https://github.com/user-attachments/assets/6d91cade-35ed-462e-b3b4-c8d903f580b5" />
 
+After this bug l ended up going through my code to see if there's anywhere l don't have braces. I had this in my main.cpp in my printPathOnGrid
+<img width="529" height="353" alt="image" src="https://github.com/user-attachments/assets/f65f56e0-5f91-452b-8334-74795e898252" />
+after folowing the c++ core guidelines.
+<img width="541" height="322" alt="image" src="https://github.com/user-attachments/assets/fa62829a-a954-4101-b3c4-6bd10359fad4" />
+
 
 ---
 
