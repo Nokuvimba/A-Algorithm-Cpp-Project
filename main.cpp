@@ -18,25 +18,18 @@ static void printPathOnGrid(const Grid& grid, const std::vector<Pos>& path)
 {
     // Build a mutable copy of the grid rows as strings
     std::vector<std::string> canvas(grid.rowCount());
-    for (int r = 0; r < grid.rowCount(); ++r)  {
-        for (int c = 0; c < grid.colCount(); ++c) {
+    for (int r = 0; r < grid.rowCount(); ++r)
+        for (int c = 0; c < grid.colCount(); ++c)
             canvas[r] += grid.cellAt(r, c);
-        }
-            
-    }
-       
+
     // Mark every path cell that isn't Start or Goal
-    for (const Pos& p : path) {
-        if (canvas[p.r][p.c] != 'S' && canvas[p.r][p.c] != 'G') {
+    for (const Pos& p : path)
+        if (canvas[p.r][p.c] != 'S' && canvas[p.r][p.c] != 'G')
             canvas[p.r][p.c] = '*';
-        }
-    }
-       
+
     std::cout << "\nGrid with path:\n";
-    for (const auto& row : canvas) {
+    for (const auto& row : canvas)
         std::cout << row << '\n';
-    }
-        
 }
 
 // Runs a single named test case and reports the result
@@ -62,9 +55,9 @@ int main()
     std::cout << "=== A* Pathfinding Demo ===\n";
 
     // --- Test 1: Default grid (goal surrounded by walls – no path) ---
-    const Grid defaultGrid;  // uses the no-argument constructor in Grid.cpp  — the hardcoded map with Goal surrounded by walls.
+    const Grid defaultGrid;
     const AStar astar;
-    astar.demoBasics(defaultGrid); // prints the grid plus the Start/Goal positions and heuristic value. 
+    astar.demoBasics(defaultGrid);
     runTest("Default grid (enclosed goal)", defaultGrid);
 
     // --- Test 2: Open grid – straightforward path ---

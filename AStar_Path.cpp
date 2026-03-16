@@ -60,10 +60,8 @@ std::vector<Pos> AStar::findPath(const Grid& grid) const {
     std::priority_queue<Node, std::vector<Node>, NodeCompare> open;
 
     g[start.r][start.c] = 0;
-    const int h0 = manhattan(start, goal);
+    const int h0 = estimate(start, goal);
     open.push({ start, 0, h0, h0 });
-
-    int nodesExpanded = 0;
 
     while (!open.empty()) {
         const Node cur = open.top();
@@ -72,16 +70,13 @@ std::vector<Pos> AStar::findPath(const Grid& grid) const {
         const Pos p = cur.pos;
 
         // Lazy deletion: skip if already processed with a lower cost
-        if (closed[p.r][p.c]) { continue; }
+        if (closed[p.r][p.c]) continue;
         closed[p.r][p.c] = true;
 
-        ++nodesExpanded; 
-
         // Early exit: path to goal found
-        if (p == goal) {
-            std::cout << "Nodes expanded: " << nodesExpanded << '\n';
+        if (p == goal)
             return reconstructPath(start, goal, parent);
-        }
+
         // Expand each walkable neighbour
         for (const Pos& n : neighbours(grid, p)) {
             if (closed[n.r][n.c]) continue;
@@ -92,12 +87,12 @@ std::vector<Pos> AStar::findPath(const Grid& grid) const {
                 g[n.r][n.c] = tentativeG;
                 parent[n.r][n.c] = p;
 
-                const int h = manhattan(n, goal);
+                const int h = estimate(n, goal);
                 open.push({ n, tentativeG, h, tentativeG + h });
             }
         }
     }
-    std::cout << "Nodes expanded: " << nodesExpanded << '\n';
+
     return {}; // No path found
 }
 
@@ -111,7 +106,7 @@ void AStar::demoBasics(const Grid& grid) const {
     std::cout << "\nStart = (" << start.r << ", " << start.c << ")\n"
         << "Goal  = (" << goal.r << ", " << goal.c << ")\n"
         << "Heuristic estimate (start -> goal) = "
-        << manhattan(start, goal) << "\n"
+        << estimate(start, goal) << "\n"
         << "\nNeighbours of Start:\n";
 
     for (const Pos& n : neighbours(grid, start))
