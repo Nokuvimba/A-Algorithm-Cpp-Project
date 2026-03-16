@@ -629,7 +629,93 @@ The open grid result is the clearest demonstration of why Manhattan works well. 
 
 ---
 
+# Week 6 (17/03/2026)
 
+The goal was to refactor `main.cpp` by separating helper functions into their own files, improving modularity and applying the Single Responsibility Principle.
+
+---
+
+## Why I Refactored `main.cpp`
+
+By Week 5, `main.cpp` contained three distinct responsibilities in one file:
+
+- **Visualisation** — `printPathOnGrid()` built a copy of the grid and stamped `*` on the path
+- **Testing** — `runTest()` ran the algorithm on a named grid and reported the result
+- **Orchestration** — `main()` set up the grids and called the tests
+
+This violates the **Single Responsibility Principle** (Martin, 2003), which states that each unit of code should have one clearly defined reason to change. This principle is also reflected in **C++ Core Guideline F.3**, which states that functions should be kept short and focused on one task.
+
+Having all three functions in one file makes the code harder to maintain and follow up.
+
+---
+
+## What I Created
+
+### `Display.h` / `Display.cpp`
+
+`printPathOnGrid()` was extracted into its own file pair.
+
+```cpp
+// Display.h
+void printPathOnGrid(const Grid& grid, const std::vector<Pos>& path);
+```
+
+**Why:** Displaying a result on screen is a *presentation* concern and has nothing to do with running a test or coordinating the program. Isolating it means if the display format ever needs to change only the `Display.cpp` would need to be touched.
+
+---
+
+### `TestRunner.h` / `TestRunner.cpp`
+
+`runTest()` was extracted into its own file pair.
+
+```cpp
+// TestRunner.h
+void runTest(const std::string& name, const Grid& grid);
+```
+
+**Why:** Running a test — calling `findPath()`, checking whether a path was returned, printing the result — is a *testing* concern and separating it means `main()` is now just a list of test cases. The logic for what a test *does* lives in one place and only needs to be written once. This also applies the **DRY principle**, now the same if/else logic no longer needs to be repeated for every test case.
+
+---
+
+### `main.cpp` (after refactor)
+
+`main()` now only does one thing: construct grids and call `runTest()` and contains no logic of its own.
+
+`main.cpp` does not need to know about `Display` at all — `TestRunner` handles that internally. This is called **loose coupling** where each file depends only on what it directly needs.
+
+---
+
+
+
+
+
+---
+
+## File Structure After Week 6
+<img width="356" height="490" alt="image" src="https://github.com/user-attachments/assets/05413934-6cd3-4a47-bf7b-182b6f8caa3d" />
+
+| File | Responsibility |
+|---|---|
+| `Pos.h` | Position data type |
+| `Node.h` | Node cost structure + comparator |
+| `Grid.h/.cpp` | Map storage, validation, printing |
+| `AStar.h` | Algorithm interface |
+| `AStar_Heuristic.cpp` | Manhattan heuristic |
+| `AStar_Neighbours.cpp` | 4-direction neighbour generation |
+| `AStar_Path.cpp` | Core search loop + path reconstruction |
+| `Display.h/.cpp` | Grid visualisation with path overlay |
+| `TestRunner.h/.cpp` | Named test execution and reporting |
+| `main.cpp` | Entry point — test orchestration only |
+
+
+
+---
+
+## References
+
+- Martin, R. C. (2003). *Agile Software Development: Principles, Patterns, and Practices*. Prentice Hall.
+- ISO C++ Foundation. *C++ Core Guidelines — F.3: Keep functions short and focused*. Available at: https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f3-keep-functions-short-and-focused
+- ISO C++ Foundation. *C++ Core Guidelines — F.1: Package meaningful operations as carefully named functions*. Available at: https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f1-package-meaningful-operations-as-carefully-named-functions
 
 
 
