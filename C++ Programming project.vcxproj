@@ -126,14 +126,18 @@
     <ClCompile Include="AStar_Heuristic.cpp" />
     <ClCompile Include="AStar_Neighbours.cpp" />
     <ClCompile Include="AStar_Path.cpp" />
+    <ClCompile Include="Display.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Testrunner.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AStar.h" />
+    <ClInclude Include="Display.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Pos.h" />
+    <ClInclude Include="Testrunner.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
