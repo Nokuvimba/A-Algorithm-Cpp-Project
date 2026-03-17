@@ -643,8 +643,11 @@ By Week 5, `main.cpp` contained three distinct responsibilities in one file:
 - **Testing** — `runTest()` ran the algorithm on a named grid and reported the result
 - **Orchestration** — `main()` set up the grids and called the tests
 
-This violates the **Single Responsibility Principle** (Martin, 2003), which states that each unit of code should have one clearly defined reason to change. This principle is also reflected in **C++ Core Guideline F.3**, which states that functions should be kept short and focused on one task.
+ This principle is also reflected in **C++ Core Guideline:**
 
+- ISO C++ Foundation. *C++ Core Guidelines — F.3: Keep functions short and focused*. Available at: [https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f3-keep-functions-short-and-focused](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#rf-single)
+- ISO C++ Foundation. *C++ Core Guidelines — F.1: Package meaningful operations as carefully named functions*. Available at:[ https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f1-package-meaningful-operations-as-carefully-named-functions
+](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#rf-package)
 Having all three functions in one file makes the code harder to maintain and follow up.
 
 ---
@@ -711,11 +714,7 @@ void runTest(const std::string& name, const Grid& grid);
 
 ---
 
-## References
 
-- ISO C++ Foundation. *C++ Core Guidelines — F.3: Keep functions short and focused*. Available at: [https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f3-keep-functions-short-and-focused](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#rf-single)
-- ISO C++ Foundation. *C++ Core Guidelines — F.1: Package meaningful operations as carefully named functions*. Available at:[ https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f1-package-meaningful-operations-as-carefully-named-functions
-](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#rf-package)
 
 
 
