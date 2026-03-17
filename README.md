@@ -688,31 +688,36 @@ void runTest(const std::string& name, const Grid& grid);
 
 ---
 
-
-
-
-
----
-
 ## File Structure After Week 6
 <img width="356" height="490" alt="image" src="https://github.com/user-attachments/assets/05413934-6cd3-4a47-bf7b-182b6f8caa3d" />
 
-| File | Responsibility |
-|---|---|
-| `Pos.h` | Position data type |
-| `Node.h` | Node cost structure + comparator |
-| `Grid.h/.cpp` | Map storage, validation, printing |
-| `AStar.h` | Algorithm interface |
-| `AStar_Heuristic.cpp` | Manhattan heuristic |
-| `AStar_Neighbours.cpp` | 4-direction neighbour generation |
-| `AStar_Path.cpp` | Core search loop + path reconstruction |
-| `Display.h/.cpp` | Grid visualisation with path overlay |
-| `TestRunner.h/.cpp` | Named test execution and reporting |
-| `main.cpp` | Entry point — test orchestration only |
+# Code Review and Analysis
+ ## Some of the module concepts l adapted in this project
 
+### Abstraction
+`canMoveTo(r, c)` hides the rule for what counts as walkable. The caller simply asks a yes/no question. Whether walkability is determined by a character check, a flag array, or a database lookup is irrelevant to the caller.
+ 
+### Composition
+`Node` contains a `Pos`. `Grid` contains a `vector<string>`. This is composition — classes owning objects of other classes — rather than inheritance, which is the appropriate relationship here since a `Node` is not a kind of `Pos`, it simply uses one.
+ 
+### Operator Overloading
+`Pos` defines `operator==` and `operator!=`. This makes `if (p == goal)` readable and natural in the algorithm, rather than writing `if (p.r == goal.r && p.c == goal.c)` repeatedly.
+ 
+### Constructors and the `explicit` keyword
+`Grid` has two constructors — a default one (hardcoded map) and one taking a `vector<string>`. The second is marked `explicit`, which prevents the compiler from silently constructing a `Grid` from a vector passed to a function expecting a `Grid`.
+ 
+### Exception Handling
+`Grid`'s constructor throws `std::invalid_argument` if given an empty vector. `TestRunner::runTest()` wraps each test in `try/catch(const std::exception& e)`. This demonstrates that errors should be thrown where they are detected and caught where they can be meaningfully handled.
 
-
----
+ ### Encapsulation
+`Grid` stores its map in a `private` member `data_`. External code cannot index it directly — it must use `cellAt()`, `canMoveTo()`, or `withinGrid()`. This means if the internal representation ever changed (e.g. from `vector<string>` to a flat array), nothing outside `Grid.cpp` would need to change.
+ 
+### RAII
+No `new` or `delete` appears anywhere in the project. All memory is managed through `std::vector`, which allocates on construction and frees on destruction. When `findPath()` returns, all its local vectors  : `g`, `parent`, `closed`, the priority queue — are destroyed automatically. This prevents memory leaks without requiring to manually cleanup the code.
+ 
+### Modular File Structure
+Header guards (`#ifndef / #define / #endif`) appear in every `.h` file. These prevent the contents of a header from being pasted into a translation unit more than once, which would cause duplicate definition errors at link time.
+ 
 
 
 
