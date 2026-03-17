@@ -713,7 +713,6 @@ void runTest(const std::string& name, const Grid& grid);
 
 ## References
 
-- Martin, R. C. (2003). *Agile Software Development: Principles, Patterns, and Practices*. Prentice Hall.
 - ISO C++ Foundation. *C++ Core Guidelines — F.3: Keep functions short and focused*. Available at: [https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f3-keep-functions-short-and-focused](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#rf-single)
 - ISO C++ Foundation. *C++ Core Guidelines — F.1: Package meaningful operations as carefully named functions*. Available at:[ https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f1-package-meaningful-operations-as-carefully-named-functions
 ](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#rf-package)
