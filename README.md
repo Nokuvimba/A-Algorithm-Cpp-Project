@@ -718,10 +718,44 @@ No `new` or `delete` appears anywhere in the project. All memory is managed thro
 ### Modular File Structure
 Header guards (`#ifndef / #define / #endif`) appear in every `.h` file. These prevent the contents of a header from being pasted into a translation unit more than once, which would cause duplicate definition errors at link time.
  
+### Standard Libraries I Used
+| Component | Where used | Purpose |
+|---|---|---|
+| `std::vector` | Throughout | Primary container for all dynamic data |
+| `std::priority_queue` | `AStar_Path.cpp` | Open set — always extracts cheapest node |
+| `std::reverse` | `reconstructPath()` | Flips the path from goal→start to start→goal |
+| `std::numeric_limits` | `AStar_Path.cpp` | Provides `INF` without a magic number |
+| `std::invalid_argument` | `Grid.cpp` | Standard exception type for bad input |
 
 
+##  Memory Layout
+ 
+### Stack vs Heap
+Local variables in `findPath()` — `start`, `goal`, `rows`, `cols`, `cur`, loop counters — live on the stack and are freed automatically when the function returns. The headers of each `vector` also live on the stack. The actual contents of those vectors live on the heap and is managed by `vector`'s internal allocator.
+ 
+### Heap usage during a 5×5 search
+```
+g[5][5]       — 25 integers        (100 bytes at 4 bytes/int)
+parent[5][5]  — 25 Pos objects     (200 bytes at 8 bytes/Pos)
+closed[5][5]  — 25 bools           (25 bytes minimum)
+open          — up to 25 Nodes     (up to ~500 bytes)
+```
 
+## UML Class Diagram
 
+## Memory Diagram
 
-
+## Compilation Process
+The project moves through four stages:
+ 
+**Preprocessor:** Each `.cpp` file is expanded independently. `#include` directives are replaced with the full text of the named header. Header guards ensure no header is pasted twice into the same translation unit. After this stage there are no `#include` directives remaining but only pure C++.
+ 
+**Compiler:** Each expanded file is compiled to assembly (`.s`). The compiler type checks every expression, verifies function signatures against their declarations, and applies optimisations. It trusts declarations in headers — it does not need to see `neighbours()` defined to compile `AStar_Path.cpp`, only declared.
+ 
+**Assembler:** Each `.s` file is converted to a machine-code object file (`.o`). At this point the project consists of seven independent object files: `Grid.o`, `AStar_Path.o`, `AStar_Heuristic.o`, `AStar_Neighbours.o`, `Display.o`, `TestRunner.o`, `main.o`.
+ 
+**Linker:** All `.o` files are combined into one executable. The linker resolves every function call to its definition — `main.o`'s call to `runTest` is matched to `TestRunner.o`, `TestRunner.o`'s call to `findPath` is matched to `AStar_Path.o`. An "undefined reference" error at this stage means a function was declared but never defined.
+ 
+The benefit of the modular split l did in relation to the compilation process is that if only `Display.cpp` changes, only `Display.o` needs recompiling. The linker then stitches the new `Display.o` with the unchanged object files. This incremental compilation becomes significant as a project grows.
+ 
 
