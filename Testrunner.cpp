@@ -16,19 +16,26 @@ test case and reports the result.
 
 void runTest(const std::string& name, const Grid& grid)
 {
-    const AStar astar;
-    std::cout << "\n--- Test: " << name << " ---\n";
-    grid.print();
-
-    const auto path = astar.findPath(grid);
-
-    if (path.empty())
+    try
     {
-        std::cout << "No path found.\n";
+        const AStar astar;
+        std::cout << "\n--- Test: " << name << " ---\n";
+        grid.print();
+
+        const auto path = astar.findPath(grid);
+
+        if (path.empty())
+        {
+            std::cout << "No path found.\n";
+        }
+        else
+        {
+            std::cout << "Path found! Steps = " << path.size() - 1 << '\n';
+            printPathOnGrid(grid, path);
+        }
     }
-    else
+    catch (const std::exception& e)
     {
-        std::cout << "Path found! Steps = " << path.size() - 1 << '\n';
-        printPathOnGrid(grid, path);
+        std::cerr << "Error in test \"" << name << "\": " << e.what() << '\n';
     }
 }

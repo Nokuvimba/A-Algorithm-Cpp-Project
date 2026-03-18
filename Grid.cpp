@@ -10,6 +10,7 @@ stores the grid, prints it, knows what's walkable
 #include "Grid.h"
 #include <iostream>
 #include <utility>
+#include <stdexcept>
 
 Grid::Grid()
     : data_{
@@ -25,6 +26,10 @@ Grid::Grid()
 Grid::Grid(std::vector<std::string> data)
     : data_(std::move(data))
 {
+    if (data_.empty())
+    {
+        throw std::invalid_argument("Grid cannot be constructed from an empty map.");
+    }
 }
 
 void Grid::print() const {
