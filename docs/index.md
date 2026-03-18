@@ -762,8 +762,10 @@ open          — up to 25 Nodes     (up to ~500 bytes)
 ```
 
 ## UML Class Diagram
+<img width="424" height="476" alt="image" src="https://github.com/user-attachments/assets/038a4470-5db1-44b1-8879-5e04a2212e46" />
 
 ## Memory Diagram
+<img width="413" height="447" alt="image" src="https://github.com/user-attachments/assets/a7e6bb30-4de6-4265-be51-e6e5babdbb90" />
 
 ## Compilation Process
 The project moves through four stages:
