@@ -691,6 +691,26 @@ void runTest(const std::string& name, const Grid& grid);
 ## File Structure After Week 6
 <img width="356" height="490" alt="image" src="https://github.com/user-attachments/assets/05413934-6cd3-4a47-bf7b-182b6f8caa3d" />
 
+## Adding Exception Handling
+I added a `try/catch` exception just to demonstrate what we learnt in the lab.
+### Where I Added It and Why
+
+#### `Grid.cpp` (throw the error)
+<img width="785" height="380" alt="image" src="https://github.com/user-attachments/assets/6da50cb6-b91a-48b3-9f86-6b2eb110d99f" />
+
+###### Why here?
+An empty grid cannot have a Start or Goal position. If one reached `findPath()`, it would silently create zero-sized 2D vectors and produce a wrong result with no error message. Throwing at construction time enforces the rule that a `Grid` object must always be in a valid state. The error is raised as close to its cause as possible, rather than surfacing silently later.
+
+#### `TestRunner.cpp` (catch the error)
+<img width="706" height="646" alt="image" src="https://github.com/user-attachments/assets/8552a5e6-234a-4f96-81b4-77b8c83b5f71" />
+
+###### Why here?
+`runTest()` handles one test case from start to finish. Catching here means one bad test does not crash the entire program. The error is printed to `std::cerr` (the error output stream, separate from `std::cout`) and the next test continues normally.
+ 
+`const std::exception& e` catches the base class of all standard exceptions, including `std::invalid_argument`. Catching the base class rather than the specific type means this handler would also cover any other standard exception thrown during the test, not just the one from `Grid`.
+ 
+`e.what()` returns the message string that was passed when the exception was constructed — in this case `"Grid cannot be constructed from an empty map."`.
+
 # Code Review and Analysis
  ## Some of the module concepts l adapted in this project
 
