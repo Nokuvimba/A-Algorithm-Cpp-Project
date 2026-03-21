@@ -7,35 +7,30 @@
 A console-based A* pathfinding program that finds the shortest path from **S** (start) to **G** (goal)
 on a grid containing obstacles **#**. The shortest path is displayed using **\*** characters.
 
-
-
 ## **What is A-Star Algorithm**
 It is a technique used in path-finding and graph traversals.
 I read to understand the concept of the A*algorithm and looked at sample code :https://www.geeksforgeeks.org/dsa/a-search-algorithm/ , https://github.com/JDSherbert/A-Star-Pathfinding
 
-### **Project Idea**
+## Week 1 (04/02/2026)
+**Goal:** The goal is to understand the A* and learn to print a character-based grid.
 
-## Weekly Progress Log
-### Week 1 (04/02/2026)
-**Goal:** To understand A* and print a character-based grid.
-- Researched A* concept + reviewed sample implementations.
-- Created repo + Visual Studio project.
-- Implemented basic grid printing using `vector<string>`.
-- Implemented simple matrix printing as a warm-up exercise.
+### Why C++17?
+I chose to use C++17 because it supports the modern C++ features while still meeting the requirements of C++11 or higher.  https://www.geeksforgeeks.org/cpp/c-11-vs-c-14-vs-c-17/ 
+
+### What I did
+- I researched the A* concept and also reviewed some sample code from the github. :https://www.geeksforgeeks.org/dsa/a-search-algorithm/ , https://github.com/JDSherbert/A-Star-Pathfinding
+- I created a repository and set up the project in the Visual Studio IDE.
+- I implemented basic grid printing using `vector<string>` and a simple matrix printing.
   
-**SetUp**
+**The Project SetUp**
   
-created 3 files aAlgorithm.h, aAlgorithm.c, main.cpp
+I created 3 files: the aAlgorithm.h, aAlgorithm.c, main.cpp
 <img width= 75% height="300" alt="image" src="https://github.com/user-attachments/assets/8a529583-17cc-4040-b146-ffbe8491a1fb" />
 
-## Why C++17?
-I chose C++17 because it supports modern C++ features (clean STL usage, safer patterns, easier code organisation)
-while still meeting the requirement of C++11 or higher.  https://www.geeksforgeeks.org/cpp/c-11-vs-c-14-vs-c-17/ 
-
-## Current File Structure
-- `main.cpp` – runs the demo map and calls the algorithm
-- `Grid.h/.cpp` – grid storage + printing + helper functions (bounds, walkable, etc.)
-- `AStar.h/.cpp` – A* algorithm implementation
+### The Current File Structure
+- The `main.cpp`  runs the demo map and calls the algorithm
+- The `Grid.h/.cpp` is for storing and printing the grid, and will later include helper functions that include finding out whether a path is walkable or not.
+- The `AStar.h/.cpp` is where the A* algorithm will be implementation
   
 In lab 1 I worked on printing out a matrix in interger and string form:
 <img width="1111" height="332" alt="image" src="https://github.com/user-attachments/assets/7d03e057-2ed8-4f9f-982a-4a7574b22ed2" />
@@ -43,31 +38,33 @@ In lab 1 I worked on printing out a matrix in interger and string form:
 <img width=33.3% height="435" alt="image" src="https://github.com/user-attachments/assets/037e21b2-037c-42a9-80fe-35b53e15ac80" />
 <img width=30.3% height="435" alt="image" src="https://github.com/user-attachments/assets/253150f2-7f39-4d22-9b51-d8a173c5e686" />
 
-## Week 1 → Week 2 Bridge (Grid + Basics for A*) 11/02/2026
+---
+## Week 1 - Week 2 (Grid + Basics for A*) 11/02/2026
 
 ### What I implemented
-This week I moved from a simple “print a grid” demo to a proper foundation that A* can use.
+This week I moved from a simply printing a grid to having a proper foundation that A* can use.
 
-#### Grid (map handling)
-I created a `Grid` class to own the map (stored as `std::vector<std::string>`).  
+#### The Grid (map)
+I created a `Grid` class to own the grid map and it is stored as `std::vector<std::string>`.  
 The Grid is responsible for:
-- Printing the map to the console
-- Finding the Start `S` and Goal `G` automatically
-- Checking if a coordinate is valid using `withinGrid(r, c)`
-- Checking if movement is allowed using `canMoveTo(r, c)` (walls are `#`)
+- Printing the map to the console.
+- Finding the Start `S` and Goal `G` automatically.
+- Checking if a coordinate is valid using `withinGrid(r, c)`.
+- Checking if movement is allowed using `canMoveTo(r, c)`. The walls are represented by the `#`.
 
-I also added a `cellAt(r, c)` helper so the rest of the program doesn’t directly index the grid everywhere.
+I also added a `cellAt(r, c)` helper so that the rest of the program doesn’t directly index the grid everywhere.
 
-#### Pos (coordinates)
-I added: `
-struct Pos { int r; int c; };` : This keeps row/column together as one variable and makes the code easier to read.
+#### The Pos (coordinates)
+I added: `struct Pos { int r; int c; };` which keeps the row/column together as one variable.
 <img width="905" height="400" alt="image" src="https://github.com/user-attachments/assets/4e431d84-81a5-4da9-8e37-b7ecf75c2c05" />
 
-#### Manhattan heuristic
-I implemented Manhattan distance: `abs(a.r - b.r) + abs(a.c - b.c)`
-This is the correct heuristic when movement is only up/down/left/right and there are no diagonal moves. this value is an estimate (guidance for A*), not the final path length.
+#### The Manhattan heuristic
+I implemented the Manhattan distance: `abs(a.r - b.r) + abs(a.c - b.c)`. 
+This fomular gives an estimate value to guide the A*, but it is not the final length of the path. 
+The movement is only up/down/left/right and there are no diagonal moves. 
 <img width="905" height="400" alt="image" src="https://github.com/user-attachments/assets/7665217c-cb55-46a9-8d0a-d53a519e9afc" />
 <img width="905" height="400" alt="image" src="https://github.com/user-attachments/assets/438bbd6a-2015-4c6c-9eac-8d2dbf892a9f" />
+
 #### Neighbour generation (4 directions)
 I added neighbour generation using 4-direction movement:
 	•	Up, Down, Left, Right
@@ -75,21 +72,20 @@ Each neighbour is checked using canMoveTo() so we never go out of bounds or into
 
 #### Output 
 <img width="905" height="400" alt="image" src="https://github.com/user-attachments/assets/107c3daf-d955-4e4d-8f79-92330630d395" />
-Detected positions:
+The detected positions from the output are :
 	•	Start = (0,0) because S is at row 0, col 0
 	•	Goal  = (2,2) because G is at row 2, col 2
 
-Manhattan distance:
+The calculated Manhattan distance:
 	•	|0 - 2| + |0 - 2| = 2 + 2 = 4
 
-Neighbours of Start (0,0):
+The Neighbours of Start (0,0):
 	•	Up (-1,0) is out of bounds 
 	•	Left (0,-1) is out of bounds 
 	•	Down (1,0) is valid and walkable 
 	•	Right (0,1) is valid and walkable 
 
-The goal G is fully surrounded by #, so there is no valid path in this test map.
-This is a useful edge-case because when A* is implemented fully, the program should correctly report “No path found”.
+The goal G is fully surrounded by #, so there is no valid path in this grid map.
 
 ##### This is my main.cpp and Grid.cpp
 <img width="405" height="400" alt="image" src="https://github.com/user-attachments/assets/fdfe22c0-7305-4e60-8cf7-6630a2fe4cbe" />
@@ -97,13 +93,13 @@ This is a useful edge-case because when A* is implemented fully, the program sho
 <img width="405" height="400" alt="image" src="https://github.com/user-attachments/assets/3ead13d7-b0b7-4b9a-b8fa-014a69a29336" />
 
  ###### In Summary
-Grid is responsible for storing and validating the map. It finds S and G, checks bounds and movement rules, and prints the grid. AStar currently contains the two main building blocks needed for the full algorithm: Manhattan heuristic and neighbour generation. main.cpp just runs the demo to verify everything before implementing the full open/closed sets next.
+Grid is responsible for storing and validating the map. It finds S (Start) and G (Goal), while checking bounds and following the movement rules, and prints the grid. AStar currently contains the two main building blocks needed for the full algorithm: Manhattan heuristic and neighbour generation. For now the main.cpp just runs the demo to verify that everything works do far before implementing the full open/closed sets.
+
+---
 
 ## Week 2 (17/02/2026)
 
-**Goal:** To implement the core A* search algorithm using the Grid and heuristic foundations built in Week 1.
-
----
+**Goal:** The goal is to implement the core A* search algorithm using the Grid and heuristic foundations built in Week 1.
 
 ### Node Structure
 
@@ -119,18 +115,17 @@ struct Node {
 };
 ```
 
-#### My Understanding
+#### My Understanding of the code
 
 - `g` represents how many steps have been taken from Start to the current node.
 - `h` uses the Manhattan heuristic to estimate the remaining distance to the Goal.
-- `f = g + h` determines which node should be explored next — the lower the `f`, the more promising the path.
-- Separating position data (`Pos`) from cost data (`Node`) keeps the code modular and easier to reason about.
-
+- `f = g + h` determines which node should be explored next. The lower the `f`, the more promising the path.
+- I separated the position data (`Pos`) from cost data (`Node`) to keep the code modular and easier to follow through.
 ---
 
 ### Priority Queue (Open Set)
 
-To implement the A* open set, I used `std::priority_queue` with a custom comparator:
+To implement the A* open set,the `std::priority_queue` was used with a custom comparator:
 
 ```cpp
 std::priority_queue<Node, std::vector<Node>, NodeCompare>
@@ -144,92 +139,48 @@ struct NodeCompare {
 };
 ```
 
-#### Understanding
+#### My Understanding
 
-- The open set holds all candidate nodes waiting to be explored.
-- The node with the smallest `f` is always explored first (min-heap behaviour).
-- When two nodes share the same `f`, the one with the smaller `h` is preferred — this breaks ties in favour of nodes that are closer to the Goal.
-- This keeps the algorithm optimal while reducing unnecessary exploration.
+- The open set holds all the nodes that are still to be explored and the node with the smallest `f` is always explored first.
+- When two nodes share the same `f`, the one with the smaller `h` is preferred. This breaks ties in favour of nodes that are closer to the Goal, while reducing unnecessary exploration of the path.
 
----
-
-### Closed Set
+### The Closed Set
 
 ```cpp
 std::vector<std::vector<bool>> closedSet;
 ```
 
-#### Understanding
+#### My Understanding
 
-- Once a node is fully explored, it is added to the closed set.
-- This prevents the algorithm from revisiting the same position with a worse cost.
+- Once a node is fully explored, it is added to the closed set and this prevents the algorithm from revisiting the same position with a worse cost.
 - Without this, the algorithm could loop indefinitely on open grids.
 
----
+### The A* Core Algorithm (`findPath`)
 
-### A* Core Algorithm (`findPath`)
+The `findPath()` function searches for a path from Start (S) to Goal (G). It first finds their positions, then adds the Start to a list of nodes to explore (open set) with zero cost. In a loop, it picks the most promising position based on its cost (f value). If it reaches the Goal, it returns the path. Otherwise, it marks the position as visited and checks its neighbours. Walkable neighbours are given updated costs and added to the list. This continues until the Goal is found or no path exists.
 
-The `findPath()` function brings all the pieces together:
 
-1. Retrieves Start `S` and Goal `G` from the Grid.
-2. Pushes the Start node (with `g = 0`) into the open set.
-3. Repeatedly:
-   - Selects the node with the lowest `f`.
-   - If it is the Goal → path found, stop.
-   - Marks it as closed (visited).
-   - Expands each valid neighbour.
-   - Calculates new `g`, `h`, and `f` for each neighbour.
-   - Pushes neighbours into the open set.
-4. Stops when the Goal is reached **or** the open set is empty (no path exists).
-
----
-
-### Edge Case: Blocked Goal
+### The Blocked Goal
+**The Console output:**
 <img width="1112" height="624" alt="image" src="https://github.com/user-attachments/assets/80e1a2c7-8ba6-4f47-b2c8-7e4bde5136fb" />
-Test grid used:
 
-```
-S....
-.###.
-.#G#.
-.###.
-.....
-```
-
-The Goal `G` is completely surrounded by walls `#`, so no valid path exists.
-
-**Console output:**
-```
-No path found.
-```
-
-#### Understanding
-
-- This confirms that neighbour validation (`canMoveTo`) works correctly.
-- The closed set correctly prevents the algorithm from revisiting cells.
-- The algorithm terminates safely rather than looping forever.
-- Testing a "no path" case before implementing path reconstruction is important — it verifies the core loop is correct before adding more complexity.
-
----
+The Goal `G` is completely surrounded by walls `#`, hence no valid path exists.
+I tested the "no path" case before implementing path reconstruction because it is easy to detect if the code fuctions are working properly when l already know the output.Now l can add more complexity. 
 
 ### Path Reconstruction (Prepared, Not Yet Complete)
 
-In `main.cpp` I added a `printPathOnGrid()` helper that:
-- Takes a copy of the grid (so the original is not modified).
-- Overlays `*` characters onto path cells between Start and Goal.
+In `main.cpp` I added a `printPathOnGrid()` helper that copies the grid and marks the path from Start to Goal using *, without changing the original grid.
+The next step is to track parent nodes in findPath() so the path can be traced 
 <img width="1325" height="870" alt="image" src="https://github.com/user-attachments/assets/06357436-a5fd-4a14-aa93-4d399d3de1f2" />
-**Next step:** implement parent tracking inside `findPath()` so the path can be traced back from Goal to Start, then passed to `printPathOnGrid()` for display.
 
 ---
 ## Week 3 (24/02/2026)
 
-**Goal:** To refactor the existing code using the C++ Core Guidelines without changing what the algorithm does. I also added sme tests.
+**Goal:** The goal is to refactor the existing code following the C++ Core Guidelines without changing what the algorithm does and to add some tests.
 
----
-
-### What are the C++ Core Guidelines?
+### The C++ Core Guidelines
 <img width="1902" height="1018" alt="image" src="https://github.com/user-attachments/assets/1b32a5ef-6a8b-4ba3-831b-2e7034ed3cea" />
-Key rules I applied:
+These are the rules I applied:
 
 | Guideline | Rule |
 |---|---|
@@ -241,11 +192,12 @@ Key rules I applied:
 | `ES.20` | Always initialise variables at the point of declaration |
 | `I.3` | Avoid singletons — pass dependencies explicitly |
 
----
-### Why l separated the files per module(function)
-So that it would be easy to edit and add new things accordingly.
+The other reason why l separated the files per module was to make it easy for myself when l need to edit the functions respectively. 
 
-### Change 1 — `[[nodiscard]]` on `findPath()`
+### Change 1 
+
+
+I added `[[nodiscard]]` on `findPath()` so that the compiler warns if the returned path is ignored. This would help prevent mistakes.
 
 ```cpp
 // Before
@@ -255,30 +207,14 @@ std::vector<Pos> findPath(const Grid& grid) const;
 [[nodiscard]] std::vector<Pos> findPath(const Grid& grid) const;
 ```
 
-#### Understanding
+### Change 2 
 
-`[[nodiscard]]` is a C++17 attribute that tells the compiler: *"warn if the caller throws this return value away."*
-
-Without it, a developer could accidentally write:
-
+I added an `enum class Heuristic` to allow choosing between Manhattan and Euclidean distance. Before there was no option of having to choose.
 ```cpp
-astar.findPath(grid);   // result silently discarded — no warning
-```
-
-With `[[nodiscard]]`, the compiler produces a warning immediately and makes the function **harder to misuse**.
-
----
-
-### Change 2 — `enum class Heuristic` (adding Euclidean)
-
-```cpp
-// Before — no choice of heuristic existed at all
-
-// After
 enum class Heuristic { Manhattan, Euclidean };
 ```
 
-And a new dispatch function:
+And a new estimate() function that selects the correct heuristic, making the algorithm more flexible without changing the main logic.
 
 ```cpp
 int AStar::estimate(Pos a, Pos b) const {
@@ -288,57 +224,21 @@ int AStar::estimate(Pos a, Pos b) const {
     }
 }
 ```
-
-#### Understanding
-
-**Why `enum class` and not plain `enum`?**
-
-A plain `enum` leaks its values into the surrounding scope, which can cause name collisions:
-
-```cpp
-enum Heuristic { Manhattan, Euclidean };
-int Manhattan = 5;   //  name clash — won't compile
-```
-
-An `enum class` keeps its values scoped:
-
-```cpp
-enum class Heuristic { Manhattan, Euclidean };
-int Manhattan = 5;   //  no clash — they are different things
-```
-
-**Why a dispatch function `estimate()`?**
-
-Previously, `findPath()` called `manhattan()` directly — hardcoded. Now `estimate()` reads the `heuristic_` member and picks the right function. This means l can change heuristic at construction time and the rest of the algorithm doesn't change at all:
+Now l can change heuristic at construction time without having to change the rest of the algorithm. 
 
 ```cpp
 AStar defaultSearch;                           // Manhattan
 AStar euclideanSearch(Heuristic::Euclidean);   // Euclidean
 ```
 
----
+### Change 3
 
-### Change 3 — `const` by default
+I made variables l was not going to be changing `const` to avoid accidental changes. 
 
-```cpp
-// Before
-Pos start = grid.findStart();
-AStar astar;
-
-// After
-const Pos  start = grid.findStart();
-const AStar astar;
-```
-
-#### Understanding
-
-The Core Guidelines say: **make everything `const` unless you know you need to mutate it.**
-
-If `start` is `const` and something accidentally tries to change it later, the compiler stops it immediately. Without `const`, that bug could go unnoticed.
-
----
 
 ### Change 4 — `[[nodiscard]]` tie-breaking in `NodeCompare`
+
+I simplified the comparator using a ternary operator, instead of a nested `if`. This keeps the function short (Core Guideline `F.3`) and makes the logic easier to read and understand.
 
 ```cpp
 struct NodeCompare {
@@ -348,30 +248,25 @@ struct NodeCompare {
 };
 ```
 
-#### Understanding
+### Change 5 
 
-The comparator now uses a single-line ternary expression instead of a nested `if`. This keeps the function short (Core Guideline `F.3`) and makes the logic easier to read at a glance: *"if f values tie, prefer smaller h; otherwise prefer smaller f."*
-
----
-
-### Change 5 — Removed magic numbers
+I replaced the raw value `+1` with a named constant `MOVE_COST` to make the code clearer. This makes the intent obvious.
 
 ```cpp
-// Before — what does 1 mean here?
+// Before — the meaning of 1 was not clear
 const int tentativeG = g[p.r][p.c] + 1;
 
-// After — named constant, meaning is clear
-constexpr int MOVE_COST = 1;   // uniform cost — will become terrain cost later
+// After —now there's a named constant
+constexpr int MOVE_COST = 1;  
 const int tentativeG = g[p.r][p.c] + MOVE_COST;
 ```
 
-#### Understanding
 
-A "magic number" is a raw value in code with no explanation. `+ 1` could mean anything. `+ MOVE_COST` makes the intent clear, and it marks exactly where the code needs to change when weighted terrain is added — which is next.
-
----
 
 ### Change 6 — `runTest()` helper in `main.cpp`
+
+The Core Guideline `F.3` says functions should do **one thing** so I moved the repeated test logic into a `runTest()` function to stop code repetition. 
+Before this, the `main()` repeated the same print/run/check logic for every test. The `main()` is now just a list of test cases and I now find easy to follow through and edit. This s because the is now in one place and dding a new test is now one line instead of five
 
 ```cpp
 static void runTest(const std::string& name, const Grid& grid) {
@@ -388,17 +283,7 @@ static void runTest(const std::string& name, const Grid& grid) {
 }
 ```
 
-#### Understanding
-
-Before this, `main()` repeated the same print/run/check logic for every test. The Core Guideline `F.3` says functions should do **one thing**. Extracting `runTest()` means:
-
-- `main()` is now just a list of test cases — easy to read
-- The test logic lives in one place — easy to change
-- Adding a new test is one line instead of five
-
----
-
-### Test Cases Added
+#### Test Cases Added
 
 | Test | Grid | Expected |
 |---|---|---|
@@ -413,129 +298,48 @@ Before this, `main()` repeated the same print/run/check logic for every test. Th
 
 **Goal:** Claude suggested three improvements to improve my code, this is my review on them and my decisions on which ones fit the scope of my project. I also cleaned the code accordingly.
 
----
-
-### Suggested Improvements
-
-After completing the Week 3 refactor, Claude suggested I improve on the following 3 things:
-
----
+### Improvements
+After completing the Week 3 refactor, I looked at a few suggested improvements from Claude and decided which ones were worth adding to this project.
 
 #### 1. Weighted Terrain Cells
+**What it is:**  
+Weighted terrain means some cells cost more to move through than others. For example, a `W` tile could cost 3 instead of 1, so A* would choose the cheapest path overall and not just the shortest.
 
-Claude suggested that I introduce a `W` tile that costs 3 to enter so A* routes around expensive terrain instead of always treating every cell the same.
-
-**What it is:**
-Weighted terrain means different cells on the grid carry different costs to enter. Right now every move costs exactly 1, so A* simply finds the path with the fewest steps. With weighted terrain, a `W` tile could cost 3 and not 1 to step into - meaning that A* would calculate the total cost of a path rather than just counting steps. If a short path goes through two swamp tiles it might cost more overall than a longer path that avoids them entirely. A* would then correctly choose the longer but cheaper route. This is useful in real-world applications like game maps or navigation systems where some terrain is harder to cross than others.
-
-**Why I am not implementing it:**
-This project is a mini demonstration of how A* works. The goal is to show the algorithm finding the shortest path between a Start and a Goal on a simple grid. Weighted terrain belongs to a more advanced use case such as a game engine or a map routing tool, where the cost of movement varies realistically. Adding it here would go beyond the scope of the project without adding value to the algorithm demonstration itself. Uniform cost with Manhattan distance is the correct and complete approach for what this project needs.
-
----
+**Why I am not implementing it:**  
+The project's requirement is meant to show how A* works in a simple grid. Adding weighted terrain would make it more complex without adding much value to the core idea. But this would be good to add in things like the google maps.
 
 #### 2. Load Grid From a File
+**What it is:**  
+Instead of hardcoding grids, the program would read them from a `.txt` file. This would make it easier to test different maps without changing the code.
 
-Claude suggested adding a static factory function to `Grid` that reads a `.txt` file at runtime so grids no longer need to be hardcoded inside `main.cpp`.
+**Why I am not implementing it:**  
+For this project, the test grids are fixed and already cover the main cases. Adding file handling would add extra complexity without improving the demonstration of A*.
 
-**What it is:**
-Currently every test grid is written directly into the source code. File loading would mean the program opens a text file, reads each line as a row of the grid, and constructs a `Grid` from that data. The benefit is that you could design and test new maps without editing the source code or recompiling — you would just create a new `.txt` file and pass its name to the program. This is how most real pathfinding tools work: the map data lives separately from the program logic.
-
-**Why I am not implementing it:**
-For a mini project with a fixed set of test cases, hardcoded grids are clear and sufficient. The test cases already cover the important scenarios — open paths, mazes, blocked goals, and edge cases. File loading would introduce additional complexity around file path handling and error checking that adds no value to demonstrating how A* works. It would be a meaningful addition if this were a larger project designed to handle user-created maps.
-
----
 
 #### 3. Node Expansion Counter
+**What it is:**  
+This counts how many nodes A* processes during the search. So it basically shows how much work the algorithm is doing.
 
-Claude suggested adding a counter inside `findPath` that tracks how many nodes are popped off the open list and processed during the search.
+**Why I am implementing it:**  
+This addition helps show how well the heuristic guides the algorithm.
 
-**What it is:**
-The node expansion counter is a way of measuring how much work A* is doing. Every time the algorithm takes a node off the open list and processes it, that is one expansion. Counting these gives a number that shows how efficiently the heuristic is guiding the search. A good heuristic guides A* directly toward the Goal with fewer expansions. A weaker heuristic leaves A* exploring more of the grid unnecessarily. 
-
-**Why I am implementing it:**
-This is a small, focused change that adds genuine insight into the algorithm's behaviour. It makes the search visible, I will be able to see exactly how hard A* is working on each test case.
-
----
-
-### Code Cleanup — Removing Euclidean
+### Cleaning the Code by Removing Euclidean
 
 #### Why I removed Euclidean  
 
-In Week 3, I had added a `Heuristic` enum and Euclidean distance function to demonstrate extensibility:
+In Week 3, I added a `Heuristic` enum and a Euclidean function to show that the algorithm could support different heuristics. However, after reviewing the project, I realised this was not needed.
 
-```cpp
-// AStar.h — before
-enum class Heuristic { Manhattan, Euclidean };
+#### My Understanding  
 
-explicit AStar(Heuristic h = Heuristic::Manhattan) : heuristic_(h) {}
-```
+Manhattan distance matches how movement works on this grid — only up, down, left, and right. It gives a good estimate of the real cost and guides the search efficiently.
 
-```cpp
-// AStar_Heuristic.cpp — before
-int AStar::euclidean(Pos a, Pos b) const {
-    const double dr = static_cast<double>(a.r - b.r);
-    const double dc = static_cast<double>(a.c - b.c);
-    return static_cast<int>(std::sqrt(dr * dr + dc * dc));
-}
+Euclidean distance assumes diagonal movement, which is not allowed here. Because of this, it is less accurate for this problem and does not improve the result.
 
-int AStar::estimate(Pos a, Pos b) const {
-    switch (heuristic_) {
-        case Heuristic::Euclidean: return euclidean(a, b);
-        default:                   return manhattan(a, b);
-    }
-}
-```
+#### After cleanup  
 
-#### My Understanding on Why Manhattan is correct and Euclidean is not neccessarily needed
+I removed the `Heuristic` enum, the `euclidean()` function, and the `estimate()` dispatcher. The algorithm now uses Manhattan distance directly.
 
-Manhattan distance counts steps horizontally and vertically:
-
-```
-|a.r - b.r| + |a.c - b.c|
-```
-
-Euclidean distance measures straight-line distance:
-
-```
-sqrt((a.r - b.r)² + (a.c - b.c)²)
-```
-
-On this grid, movement is strictly **4-directional** — up, down, left, right. Diagonal movement is not allowed. This means:
-
-- Manhattan always gives an **exact or tight underestimate** of the real cost as it is admissible and well-suited to this movement model
-- Euclidean gives a **looser underestimate** because it assumes that one can travel diagonally, which I cannot. It still finds the correct path but guides the search less accurately
-
-For a 4-direction grid, Manhattan is the right heuristic. Euclidean would only be more appropriate if diagonal movement was required, which this project does not necessarily need.
-
-#### After cleanup
-
-```cpp
-// AStar.h — after
-class AStar {
-public:
-    AStar() = default;
-
-    [[nodiscard]] std::vector<Pos> findPath(const Grid& grid) const;
-    void demoBasics(const Grid& grid) const;
-
-private:
-    int manhattan(Pos a, Pos b) const;
-    std::vector<Pos> neighbours(const Grid& grid, Pos p) const;
-    std::vector<Pos> reconstructPath(
-        Pos start, Pos goal,
-        const std::vector<std::vector<Pos>>& parent) const;
-};
-```
-
-```cpp
-// AStar_Heuristic.cpp — after
-int AStar::manhattan(Pos a, Pos b) const {
-    return std::abs(a.r - b.r) + std::abs(a.c - b.c);
-}
-```
-
-I removed the `Heuristic` enum, `euclidean()`, and `estimate()` dispatcher. `findPath` now calls `manhattan()` directly .
-The output didn't change because Manhattan was always the default anyway.
+The output stayed the same, since Manhattan was already the default, but the code is now simpler and more focused on the actual problem.
 <img width="641" height="1017" alt="image" src="https://github.com/user-attachments/assets/34dcc6f2-1e7f-482d-a8af-cec098d4267c" />
 
 ---
@@ -567,6 +371,12 @@ The counter is printed in two places:
 -so that every test always reports a count.
 
 ---
+
+
+
+
+
+
 
 ### A Bug l Encountered
 
@@ -645,9 +455,8 @@ By Week 5, `main.cpp` contained three distinct responsibilities in one file:
 
  This principle is also reflected in **C++ Core Guideline:**
 
-- ISO C++ Foundation. *C++ Core Guidelines — F.3: Keep functions short and focused*. Available at: [https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f3-keep-functions-short-and-focused](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#rf-single)
-- ISO C++ Foundation. *C++ Core Guidelines — F.1: Package meaningful operations as carefully named functions*. Available at:[ https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f1-package-meaningful-operations-as-carefully-named-functions
-](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#rf-package)
+-  *C++ Core Guidelines — F.3: Keep functions short and focused*. Available at: [https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f3-keep-functions-short-and-focused](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#rf-single)
+-  *C++ Core Guidelines — F.1: Package meaningful operations as carefully named functions*. Available at:[ https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f1-package-meaningful-operations-as-carefully-named-functions](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#rf-package)
 Having all three functions in one file makes the code harder to maintain and follow up.
 
 ---
@@ -781,4 +590,10 @@ The project moves through four stages:
 The benefit of the modular split l did in relation to the compilation process is that if only `Display.cpp` changes, only `Display.o` needs recompiling. The linker then stitches the new `Display.o` with the unchanged object files. This incremental compilation becomes significant as a project grows.
  
 
+#References
+A*Algotithm explained - https://www.geeksforgeeks.org/dsa/a-search-algorithm/ , https://github.com/JDSherbert/A-Star-Pathfinding
+The C++ version choice - https://www.geeksforgeeks.org/cpp/c-11-vs-c-14-vs-c-17/ 
 
+*C++ Core Guidelines — F.3: Keep functions short and focused*. Available at: [https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f3-keep-functions-short-and-focused](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#rf-single)
+*C++ Core Guidelines — F.1: Package meaningful operations as carefully named functions*. Available at:[ https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f1-package-meaningful-operations-as-carefully-named-functions
+](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#rf-package)
