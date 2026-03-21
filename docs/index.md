@@ -516,7 +516,10 @@ Header guards are used in every `.h` file to prevent multiple inclusion and avoi
 ##  Memory Layout
  
 ### Stack vs Heap
-Local variables in `findPath()` — `start`, `goal`, `rows`, `cols`, `cur`, loop counters — live on the stack and are freed automatically when the function returns. The headers of each `vector` also live on the stack. The actual contents of those vectors live on the heap and is managed by `vector`'s internal allocator.
+Local variables in `findPath()` such as `start`, `goal`, `rows`, `cols`, and loop counters are stored on the stack and are automatically freed when the function ends.  
+
+The `vector` objects themselves are also on the stack, but their actual data is stored on the heap and managed internally by `vector`.
+
  
 ### Heap usage during a 5×5 search
 ```
@@ -527,23 +530,72 @@ open          — up to 25 Nodes     (up to ~500 bytes)
 ```
 
 ## UML Class Diagram
+The diagram has the main classes in the project and l also drew arrows to show they interact with each other.Each class has a specific role and depends only on what it needs.
+
 <img width="424" height="476" alt="image" src="https://github.com/user-attachments/assets/038a4470-5db1-44b1-8879-5e04a2212e46" />
 
+`Pos` is the basic data structure used to represent positions on the grid.  
+`Node` builds on this by adding cost values used by the A* algorithm.
+
+`Grid` is responsible for storing the map and checking movement rules, but it does not know anything about the algorithm itself.
+
+`AStar` contains the main pathfinding logic and uses `Grid` and `Pos` to perform the search.
+
+`Display` is only responsible for showing the result, and `TestRunner` handles running each test case.  
+`main` simply sets everything up and starts execution.
+
+
+
 ## Memory Diagram
+
+This diagram shows how memory is used during the execution of `findPath()`.
+
 <img width="413" height="447" alt="image" src="https://github.com/user-attachments/assets/a7e6bb30-4de6-4265-be51-e6e5babdbb90" />
 
+The **stack** contains small, local variables such as `start`, `goal`, and loop counters. These are created when the function runs and automatically removed when it finishes.
+
+The **heap** stores larger data structures like the `g`, `parent`, and `closed` grids, as well as the priority queue (`open`). These are managed using `std::vector`, so memory is handled automatically.
+
+The diagram helped me understand how data is split between stack and heap, how the algorithm manages memory efficiently while running and how RAII ensures everything is cleaned up safely when the function ends.
+
+---
+
 ## Compilation Process
-The project moves through four stages:
- 
-**Preprocessor:** Each `.cpp` file is expanded independently. `#include` directives are replaced with the full text of the named header. Header guards ensure no header is pasted twice into the same translation unit. After this stage there are no `#include` directives remaining but only pure C++.
- 
-**Compiler:** Each expanded file is compiled to assembly (`.s`). The compiler type checks every expression, verifies function signatures against their declarations, and applies optimisations. It trusts declarations in headers — it does not need to see `neighbours()` defined to compile `AStar_Path.cpp`, only declared.
- 
-**Assembler:** Each `.s` file is converted to a machine-code object file (`.o`). At this point the project consists of seven independent object files: `Grid.o`, `AStar_Path.o`, `AStar_Heuristic.o`, `AStar_Neighbours.o`, `Display.o`, `TestRunner.o`, `main.o`.
- 
-**Linker:** All `.o` files are combined into one executable. The linker resolves every function call to its definition — `main.o`'s call to `runTest` is matched to `TestRunner.o`, `TestRunner.o`'s call to `findPath` is matched to `AStar_Path.o`. An "undefined reference" error at this stage means a function was declared but never defined.
- 
-The benefit of the modular split l did in relation to the compilation process is that if only `Display.cpp` changes, only `Display.o` needs recompiling. The linker then stitches the new `Display.o` with the unchanged object files. This incremental compilation becomes significant as a project grows.
+
+The project goes through four main stages:
+
+**Preprocessor:**  
+Each `.cpp` file is expanded, and all `#include` statements are replaced with the contents of the headers. Header guards prevent duplication.
+
+**Compiler:**  
+Each file is compiled into assembly. The compiler checks types, verifies function declarations, and applies optimisations.
+
+**Assembler:**  
+The assembly code is converted into object files (`.o`) and each source file becomes its own object file.
+
+**Linker:**  
+All object files are combined into one executable. The linker connects function calls to their definitions. If something is declared but not defined, an error occurs.
+
+---
+# References
+
+- A* Algorithm explanation:  
+  https://www.geeksforgeeks.org/dsa/a-search-algorithm/  
+  https://github.com/JDSherbert/A-Star-Pathfinding  
+
+- C++ version comparison:  
+  https://www.geeksforgeeks.org/cpp/c-11-vs-c-14-vs-c-17/  
+
+## C++ Core Guidelines
+
+- **ES.85** — Make empty statements visible  
+  https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#es85-make-empty-statements-visible  
+
+- **F.3** — Keep functions short and focused  
+  https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f3-keep-functions-short-and-focused  
+
+- **F.1** — Package meaningful operations as carefully named functions  
+  https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f1-package-meaningful-operations-as-carefully-named-functions  
  
 
 #References
