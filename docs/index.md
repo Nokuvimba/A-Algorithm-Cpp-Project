@@ -598,11 +598,3 @@ All object files are combined into one executable. The linker connects function 
   https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f1-package-meaningful-operations-as-carefully-named-functions  
  
 
-#References
-- A*Algotithm explained - https://www.geeksforgeeks.org/dsa/a-search-algorithm/ , https://github.com/JDSherbert/A-Star-Pathfinding
-- The C++ version choice - https://www.geeksforgeeks.org/cpp/c-11-vs-c-14-vs-c-17/ 
-
-C++ Core Guidelines:
-	- **ES.85** https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#es85-make-empty-statements-visible
-    -  **F.3** : Keep functions short and focused*. Available at: [https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f3-keep-functions-short-and-focused](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#rf-single)
-	-  **F.1**: Package meaningful operations as carefully named functions*. Available at:[ https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f1-package-meaningful-operations-as-carefully-named-functions](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#rf-package)
