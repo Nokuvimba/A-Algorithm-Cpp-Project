@@ -340,72 +340,54 @@ Euclidean distance assumes diagonal movement, which is not allowed here. Because
 I removed the `Heuristic` enum, the `euclidean()` function, and the `estimate()` dispatcher. The algorithm now uses Manhattan distance directly.
 
 The output stayed the same, since Manhattan was already the default, but the code is now simpler and more focused on the actual problem.
+
 <img width="641" height="1017" alt="image" src="https://github.com/user-attachments/assets/34dcc6f2-1e7f-482d-a8af-cec098d4267c" />
 
 ---
 ## Week 5 (10/03/2026)
 
-**Goal:** Implementing the node expansion counter inside `findPath()` so the algorithm's effort is visible for each test case.
-
+**Goal:** The goal was to implement the node expansion counter inside `findPath()` so that lam able to show how much work A* is doing.
 ---
 
 ### What I Added
-
-A counter variable to `AStar_Path.cpp` inside `findPath()`:
-
+I added a counter inside `findPath()` that tracks how many nodes are actually processed during the search.
 
 #### Before — no visibility into how much work A* is doing
 <img width="481" height="442" alt="image" src="https://github.com/user-attachments/assets/dcfb6c07-f65f-4a61-b1fe-b6f18c999b26" />
 
- ####After — counter declared before the loop, incremented and printed inside it
+#### After — counter added and printed  
 <img width="458" height="486" alt="image" src="https://github.com/user-attachments/assets/81a97386-b83b-4d2d-9f9d-1be3d8512a03" />
 
-
 #### My Understanding
-
-The counter sits **after** the lazy deletion check (`if (closed[p.r][p.c]) continue`). This is deliberate as it only counts nodes that are actually processed, not ones that are skipped because they were already visited. Counting skipped nodes would give a misleading number.
-
-The counter is printed in two places:
-1. when the Goal is reached 
-2. when no path exists
--so that every test always reports a count.
-
----
-
-
-
-
-
+The counter is placed after the lazy deletion check so it only counts nodes that are actually processed. This avoids counting skipped nodes and gives a more accurate measure of the algorithm’s work.
+The counter is printed when the goal is found and when no path exists, so every test case reports a result.
 
 
 ### A Bug l Encountered
 
-During implementation the `if (p == goal)` block, it was written without curly braces:
+While implementing the `if (p == goal)` block, I initially wrote it without curly braces. This caused only the `cout` line to be part of the `if`, while the `return` ran every time the loop executed.
 
 <img width="453" height="82" alt="image" src="https://github.com/user-attachments/assets/0c7cd0ab-bc38-46ce-9336-0254a45d7c60" />
 
+As a result, A* returned immediately on the first iteration (at the Start node), which had no valid parent, so every test showed "No path found."
 
-Without braces, only the `cout` line belongs to the `if`. The `return` line ran unconditionally on every loop iteration — meaning A* returned on the very first node (Start), which had no valid parent, so every test returned an empty path and printed "No path found." This is because without braces, adding a second line to an if body silently breaks logic. I should have followed the ES.85 guideline regardless of having an inline fuction even befoe having to change code. I wouldn't have had the bug then. This made me realise how important it is to follow the coding rules even when it doesn't cost doing otherwise because it always will at some point. Just like it did with the crowd strike we've learnt  from the C++ module.
-
-### ES.85 c++ Core Guidelines
-https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#es85-make-empty-statements-visible
-<img width="924" height="433" alt="image" src="https://github.com/user-attachments/assets/d45a51c0-5490-419e-9bdf-503c3f064aba" />
-
-
-### Console Output before fixing the bug
 <img width="1659" height="961" alt="image" src="https://github.com/user-attachments/assets/974e7456-c4ec-4680-80d6-559a3687543f" />
 
 
-I had to follow the c++ guidelines, that say we have to put braces when using if statements. Even though the code was wrongly written, the compiler does not warn about it because the code is technically still valid. This is because indentation does not define scope, but braces do.
+### ES.85 c++ Core Guidelines
+To fix the bug, l refered to the c++ core guidelines, which recommends always using braces with `if` statements. If I had followed this from the start, the bug would not have happened.
+It showed me that small shortcuts in coding can lead to bigger problems later. Even if something works at the time, it can easily break when the code is changed.
+
+https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#es85-make-empty-statements-visible
+<img width="924" height="433" alt="image" src="https://github.com/user-attachments/assets/d45a51c0-5490-419e-9bdf-503c3f064aba" />
+
 <img width="638" height="82" alt="image" src="https://github.com/user-attachments/assets/f8a072fc-2416-4d1b-915d-99a3c2e60deb" />
 
----
-
-### Console Output after fixing the code
+### The Console Output after fixing the code
 
 <img width="573" height="986" alt="image" src="https://github.com/user-attachments/assets/6d91cade-35ed-462e-b3b4-c8d903f580b5" />
 
-After this bug l ended up going through my code to see if there's anywhere l don't have braces and applying the guideline
+After this bug l ended up going through my code to see if there's anywhere l don't have braces and applying the same guideline.
 In my main.cpp in my printPathOnGrid
 
 <img width="529" height="353" alt="image" src="https://github.com/user-attachments/assets/f65f56e0-5f91-452b-8334-74795e898252" />
@@ -423,27 +405,23 @@ And in the AStar_Neighbours.cpp
 <img width="485" height="234" alt="image" src="https://github.com/user-attachments/assets/5dfee718-0225-4006-ac51-d9147afffb36" />
 
 
----
-
 ### Understanding the Results
 
 | Test | Nodes expanded | What it shows |
 |---|---|---|
-| Enclosed goal | 16 | A* explored the entire reachable area before confirming no path existed |
-| Open grid | 5 | Manhattan guided A* almost directly to the Goal — very efficient |
+| Enclosed goal | 16 | A* did a full search before confirming no path existed |
+| Open grid | 5 | Manhattan guided A* almost directly to the Goal |
 | Maze grid | 9 | More exploration needed but still focused, not exhaustive |
-| Start adjacent to Goal | 2 | Start processed, Goal found on the first neighbour — trivial case |
+| Start adjacent to Goal | 2 | Start processed, Goal found on the first neighbour |
 | Fully blocked | 1 | Only Start was processed, no walkable neighbours existed |
 
-The open grid result is the clearest demonstration of why Manhattan works well. A* found a 4-step path on a 5×5 grid (25 cells total) while only processing 5 nodes. The heuristic directed the search efficiently rather than exploring the grid blindly.
+The open grid result clearly shows how effective the Manhattan heuristic is. A* found a 4-step path on a 5×5 grid (25 cells total) while only processing 5 nodes.
 
 ---
 
 # Week 6 (17/03/2026)
 
-The goal was to refactor `main.cpp` by separating helper functions into their own files, improving modularity and applying the Single Responsibility Principle.
-
----
+The goal was to refactor `main.cpp` by moving helper functions into separate files because this improves modularity and follows the Single Responsibility Principle.
 
 ## Why I Refactored `main.cpp`
 
@@ -453,109 +431,87 @@ By Week 5, `main.cpp` contained three distinct responsibilities in one file:
 - **Testing** — `runTest()` ran the algorithm on a named grid and reported the result
 - **Orchestration** — `main()` set up the grids and called the tests
 
- This principle is also reflected in **C++ Core Guideline:**
+Having all of this in one file made the code harder to read . According to the C++ Core Guidelines (F.1 and F.3), functions should be small, focused, and clearly named. Splitting these responsibilities makes the code easier to follow.
 
--  *C++ Core Guidelines — F.3: Keep functions short and focused*. Available at: [https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f3-keep-functions-short-and-focused](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#rf-single)
--  *C++ Core Guidelines — F.1: Package meaningful operations as carefully named functions*. Available at:[ https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f1-package-meaningful-operations-as-carefully-named-functions](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#rf-package)
-Having all three functions in one file makes the code harder to maintain and follow up.
-
----
 
 ## What I Created
 
 ### `Display.h` / `Display.cpp`
-
-`printPathOnGrid()` was extracted into its own file pair.
-
-```cpp
-// Display.h
-void printPathOnGrid(const Grid& grid, const std::vector<Pos>& path);
-```
-
-**Why:** Displaying a result on screen is a *presentation* concern and has nothing to do with running a test or coordinating the program. Isolating it means if the display format ever needs to change only the `Display.cpp` would need to be touched.
-
----
+I moved `printPathOnGrid()` into its own file because displaying results is a separate concern from running the algorithm. Keeping it isolated means any changes to how results are shown only affect one file.
 
 ### `TestRunner.h` / `TestRunner.cpp`
 
-`runTest()` was extracted into its own file pair.
+I also moved `runTest()` into its own file because running tests is its own responsibility. This would help avoiding repetition of the same logic for each test case and makes `main()` much cleaner.
 
-```cpp
-// TestRunner.h
-void runTest(const std::string& name, const Grid& grid);
-```
-
-**Why:** Running a test — calling `findPath()`, checking whether a path was returned, printing the result — is a *testing* concern and separating it means `main()` is now just a list of test cases. The logic for what a test *does* lives in one place and only needs to be written once. This also applies the **DRY principle**, now the same if/else logic no longer needs to be repeated for every test case.
-
----
 
 ### `main.cpp` (after refactor)
+`main()`  now only creates grids and calls `runTest()` and it does not contain any logic itself.
 
-`main()` now only does one thing: construct grids and call `runTest()` and contains no logic of its own.
+It also does not depend on `Display` directly  because this is handled by `TestRunner`. So each part of the program only depends on what it needs.
 
-`main.cpp` does not need to know about `Display` at all — `TestRunner` handles that internally. This is called **loose coupling** where each file depends only on what it directly needs.
+**This is the new file Structure**
 
----
-
-## File Structure After Week 6
 <img width="356" height="490" alt="image" src="https://github.com/user-attachments/assets/05413934-6cd3-4a47-bf7b-182b6f8caa3d" />
 
 ## Adding Exception Handling
-I added a `try/catch` exception just to demonstrate what we learnt in the lab.
-### Where I Added It and Why
+I added a basic `try/catch` exception just to demonstrate what we learnt in the lab.
 
-#### `Grid.cpp` (throw the error)
+#### In `Grid.cpp` (throwing  the error)
+An exception is thrown if the grid is empty.
+
 <img width="785" height="380" alt="image" src="https://github.com/user-attachments/assets/6da50cb6-b91a-48b3-9f86-6b2eb110d99f" />
 
-###### Why here?
-An empty grid cannot have a Start or Goal position. If one reached `findPath()`, it would silently create zero-sized 2D vectors and produce a wrong result with no error message. Throwing at construction time enforces the rule that a `Grid` object must always be in a valid state. The error is raised as close to its cause as possible, rather than surfacing silently later.
+An empty grid cannot have a Start or Goal so throwing the error here ensures the `Grid` is always valid and prevents silent failures from happening later.
 
-#### `TestRunner.cpp` (catch the error)
+
+#### In `TestRunner.cpp` (catching the error)
+
+The exception is caught inside  the `runTest()`.
 <img width="706" height="646" alt="image" src="https://github.com/user-attachments/assets/8552a5e6-234a-4f96-81b4-77b8c83b5f71" />
+ 
+Each test is handled independently, so that one failure does not stop the whole program. `e.what()` returns the error message and the next test continues.
 
-###### Why here?
-`runTest()` handles one test case from start to finish. Catching here means one bad test does not crash the entire program. The error is printed to `std::cerr` (the error output stream, separate from `std::cout`) and the next test continues normally.
- 
-`const std::exception& e` catches the base class of all standard exceptions, including `std::invalid_argument`. Catching the base class rather than the specific type means this handler would also cover any other standard exception thrown during the test, not just the one from `Grid`.
- 
-`e.what()` returns the message string that was passed when the exception was constructed — in this case `"Grid cannot be constructed from an empty map."`.
+- Overall this has showed me how separating concerns and handling errors properly makes the code more robust and easier to extend.
+
+---
 
 # Code Review and Analysis
- ## Some of the module concepts l adapted in this project
+ ## Some of the module concepts l applied in this project
 
 ### Abstraction
-`canMoveTo(r, c)` hides the rule for what counts as walkable. The caller simply asks a yes/no question. Whether walkability is determined by a character check, a flag array, or a database lookup is irrelevant to the caller.
- 
+`canMoveTo(r, c)` hides the rule for what counts as walkable.The caller only needs a yes/no answer, without worrying about how it is implemented.
+
 ### Composition
-`Node` contains a `Pos`. `Grid` contains a `vector<string>`. This is composition — classes owning objects of other classes — rather than inheritance, which is the appropriate relationship here since a `Node` is not a kind of `Pos`, it simply uses one.
+`Node` contains a `Pos`, and `Grid` contains a `vector<string>`. This is composition, where classes use other objects, rather than inheritance.
  
 ### Operator Overloading
-`Pos` defines `operator==` and `operator!=`. This makes `if (p == goal)` readable and natural in the algorithm, rather than writing `if (p.r == goal.r && p.c == goal.c)` repeatedly.
- 
-### Constructors and the `explicit` keyword
-`Grid` has two constructors — a default one (hardcoded map) and one taking a `vector<string>`. The second is marked `explicit`, which prevents the compiler from silently constructing a `Grid` from a vector passed to a function expecting a `Grid`.
- 
-### Exception Handling
-`Grid`'s constructor throws `std::invalid_argument` if given an empty vector. `TestRunner::runTest()` wraps each test in `try/catch(const std::exception& e)`. This demonstrates that errors should be thrown where they are detected and caught where they can be meaningfully handled.
+`Pos` defines `operator==` and `operator!=`, which makes comparisons like `if (p == goal)` much clearer and easier to read.
 
- ### Encapsulation
-`Grid` stores its map in a `private` member `data_`. External code cannot index it directly — it must use `cellAt()`, `canMoveTo()`, or `withinGrid()`. This means if the internal representation ever changed (e.g. from `vector<string>` to a flat array), nothing outside `Grid.cpp` would need to change.
- 
+### Constructors and the `explicit` keyword
+`Grid` has two constructors which are a default one and one that takes a `vector<string>`. The second is marked `explicit` to prevent unintended conversions.
+
+### Exception Handling
+The `Grid` constructor throws `std::invalid_argument` if given an empty vector.`TestRunner::runTest()` wraps each test in `try/catch(const std::exception& e)`, demonstrating that errors should be thrown where they are detected and caught where they can be meaningfully handled.
+
+### Encapsulation
+`Grid` stores its data in a private member `data_`. Access is controlled through functions like the `cellAt()` and `canMoveTo()`, so the internal structure can change without affecting other parts of the code.
+
 ### RAII
-No `new` or `delete` appears anywhere in the project. All memory is managed through `std::vector`, which allocates on construction and frees on destruction. When `findPath()` returns, all its local vectors  : `g`, `parent`, `closed`, the priority queue — are destroyed automatically. This prevents memory leaks without requiring to manually cleanup the code.
- 
+No `new` or `delete` is used. Memory is managed automatically using `std::vector`, and all data is cleaned up when the function ends, preventing memory leaks.
+
 ### Modular File Structure
-Header guards (`#ifndef / #define / #endif`) appear in every `.h` file. These prevent the contents of a header from being pasted into a translation unit more than once, which would cause duplicate definition errors at link time.
+Header guards are used in every `.h` file to prevent multiple inclusion and avoid compilation errors.
  
 ### Standard Libraries I Used
 | Component | Where used | Purpose |
 |---|---|---|
-| `std::vector` | Throughout | Primary container for all dynamic data |
-| `std::priority_queue` | `AStar_Path.cpp` | Open set — always extracts cheapest node |
-| `std::reverse` | `reconstructPath()` | Flips the path from goal→start to start→goal |
-| `std::numeric_limits` | `AStar_Path.cpp` | Provides `INF` without a magic number |
-| `std::invalid_argument` | `Grid.cpp` | Standard exception type for bad input |
+| `std::vector` | Throughout | Main container for dynamic data |
+| `std::priority_queue` | `AStar_Path.cpp` | Stores nodes to explore |
+| `std::reverse` | `reconstructPath()` | Reverses the final path |
+| `std::numeric_limits` | `AStar_Path.cpp` | Defines infinity safely |
+| `std::invalid_argument` | `Grid.cpp` | Is used for input validation |
 
+---
 
 ##  Memory Layout
  
@@ -591,9 +547,10 @@ The benefit of the modular split l did in relation to the compilation process is
  
 
 #References
-A*Algotithm explained - https://www.geeksforgeeks.org/dsa/a-search-algorithm/ , https://github.com/JDSherbert/A-Star-Pathfinding
-The C++ version choice - https://www.geeksforgeeks.org/cpp/c-11-vs-c-14-vs-c-17/ 
+- A*Algotithm explained - https://www.geeksforgeeks.org/dsa/a-search-algorithm/ , https://github.com/JDSherbert/A-Star-Pathfinding
+- The C++ version choice - https://www.geeksforgeeks.org/cpp/c-11-vs-c-14-vs-c-17/ 
 
-*C++ Core Guidelines — F.3: Keep functions short and focused*. Available at: [https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f3-keep-functions-short-and-focused](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#rf-single)
-*C++ Core Guidelines — F.1: Package meaningful operations as carefully named functions*. Available at:[ https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f1-package-meaningful-operations-as-carefully-named-functions
-](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#rf-package)
+C++ Core Guidelines:
+	- **ES.85** https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#es85-make-empty-statements-visible
+    -  **F.3** : Keep functions short and focused*. Available at: [https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f3-keep-functions-short-and-focused](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#rf-single)
+	-  **F.1**: Package meaningful operations as carefully named functions*. Available at:[ https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#f1-package-meaningful-operations-as-carefully-named-functions](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#rf-package)
